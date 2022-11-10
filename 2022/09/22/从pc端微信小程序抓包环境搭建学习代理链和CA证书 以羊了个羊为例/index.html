@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="绝大多数安卓模拟器与 wsl 冲突，之前搭好的安卓模拟器抓包环境不能用，气死我了！！突然看到https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;woZUSKweln47mGZnt_JB2g，搭建 pc 端的程序抓包环境，遂尝试一二，并学习记录了其中的知识盲区。 又是从笔记搬到博客的屑 Proxifier 真的真的很好用   工具介绍  Proxifier Proxifier 是一款代理客户端软">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例">
+<meta property="og:url" content="https://c4ooc0.github.io/2022/09/22/%E4%BB%8Epc%E7%AB%AF%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%AD%A6%E4%B9%A0%E4%BB%A3%E7%90%86%E9%93%BE%E5%92%8CCA%E8%AF%81%E4%B9%A6%20%E4%BB%A5%E7%BE%8A%E4%BA%86%E4%B8%AA%E7%BE%8A%E4%B8%BA%E4%BE%8B/index.html">
+<meta property="og:site_name" content="c4ooc0个人博客">
+<meta property="og:description" content="绝大多数安卓模拟器与 wsl 冲突，之前搭好的安卓模拟器抓包环境不能用，气死我了！！突然看到https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;woZUSKweln47mGZnt_JB2g，搭建 pc 端的程序抓包环境，遂尝试一二，并学习记录了其中的知识盲区。 又是从笔记搬到博客的屑 Proxifier 真的真的很好用   工具介绍  Proxifier Proxifier 是一款代理客户端软">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fjro2r2Z1E0FcJcouhCFbiFruCi4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnatvsZAWzeM4BA_AqxM_ga4EN3S.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlVis-fQX5ZCu3uVAY25ygBsYTX7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuZQKFe7VsBSuCe2K6yZecz2KKuR.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fq-_W6yTILAzRE0qD8Y140IffWVG.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FliSX0VFSGNBfR6mCPIAfGiHXVvR.png">
+<meta property="article:published_time" content="2022-09-22T07:24:46.000Z">
+<meta property="article:modified_time" content="2022-11-10T08:09:54.051Z">
+<meta property="article:author" content="c4ooc0">
+<meta property="article:tag" content="安全 瞎折腾">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fjro2r2Z1E0FcJcouhCFbiFruCi4.png">
+
+
+<link rel="canonical" href="https://c4ooc0.github.io/2022/09/22/%E4%BB%8Epc%E7%AB%AF%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%AD%A6%E4%B9%A0%E4%BB%A3%E7%90%86%E9%93%BE%E5%92%8CCA%E8%AF%81%E4%B9%A6%20%E4%BB%A5%E7%BE%8A%E4%BA%86%E4%B8%AA%E7%BE%8A%E4%B8%BA%E4%BE%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://c4ooc0.github.io/2022/09/22/%E4%BB%8Epc%E7%AB%AF%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%AD%A6%E4%B9%A0%E4%BB%A3%E7%90%86%E9%93%BE%E5%92%8CCA%E8%AF%81%E4%B9%A6%20%E4%BB%A5%E7%BE%8A%E4%BA%86%E4%B8%AA%E7%BE%8A%E4%B8%BA%E4%BE%8B/","path":"2022/09/22/从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例/","title":"从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例 | c4ooc0个人博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">c4ooc0个人博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">半吊子的安全工程师，ACG爱好者</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text"> 工具介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#proxifier"><span class="nav-number">1.1.</span> <span class="nav-text"> Proxifier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#charles"><span class="nav-number">1.2.</span> <span class="nav-text"> Charles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#burpsuite"><span class="nav-number">1.3.</span> <span class="nav-text"> Burpsuite</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fiddler"><span class="nav-number">1.4.</span> <span class="nav-text"> Fiddler</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E9%93%BE"><span class="nav-number">2.</span> <span class="nav-text"> 代理链</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tor"><span class="nav-number">2.0.1.</span> <span class="nav-text"> Tor</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6%E4%B8%8E-ca"><span class="nav-number">3.</span> <span class="nav-text"> 证书与 CA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6"><span class="nav-number">3.1.</span> <span class="nav-text"> 证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bp-%E7%9A%84-https-%E4%BA%A4%E4%BA%92%E8%BF%87%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text"> BP 的 https 交互过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windows-%E8%AF%81%E4%B9%A6%E5%AD%98%E5%82%A8"><span class="nav-number">3.3.</span> <span class="nav-text"> Windows 证书存储</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">c4ooc0</p>
+  <div class="site-description" itemprop="description">永怀谦卑与求知欲</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/c4ooc0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;c4ooc0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/choocolate-yqwd/blog" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;choocolate-yqwd&#x2F;blog" rel="noopener" target="_blank">语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友友们
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://macshuo.com/" title="http:&#x2F;&#x2F;macshuo.com&#x2F;" rel="noopener" target="_blank">testLink</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/09/22/%E4%BB%8Epc%E7%AB%AF%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%AD%A6%E4%B9%A0%E4%BB%A3%E7%90%86%E9%93%BE%E5%92%8CCA%E8%AF%81%E4%B9%A6%20%E4%BB%A5%E7%BE%8A%E4%BA%86%E4%B8%AA%E7%BE%8A%E4%B8%BA%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例 | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-09-22 15:24:46" itemprop="dateCreated datePublished" datetime="2022-09-22T15:24:46+08:00">2022-09-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 16:09:54" itemprop="dateModified" datetime="2022-11-10T16:09:54+08:00">2022-11-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>绝大多数安卓模拟器与 wsl 冲突，之前搭好的安卓模拟器抓包环境不能用，气死我了！！突然看到<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/woZUSKweln47mGZnt_JB2g">https://mp.weixin.qq.com/s/woZUSKweln47mGZnt_JB2g</a>，搭建 pc 端的程序抓包环境，遂尝试一二，并学习记录了其中的知识盲区。
+又是从笔记搬到博客的屑
+Proxifier 真的真的很好用</p>
+</blockquote>
+<h1 id="工具介绍"><a class="markdownIt-Anchor" href="#工具介绍"></a> 工具介绍</h1>
+<h2 id="proxifier"><a class="markdownIt-Anchor" href="#proxifier"></a> Proxifier</h2>
+<p>Proxifier 是一款代理客户端软件，可以让不支持代理服务器工作的程序变的可行。支持各种操作系统和各代理协议，它的运行模式可以指定端口，指定程序的特点。</p>
+<p>我理解就是指定某个程序走特定的代理服务器。比如本次环境搭建就是让微信小程序的流量通过代理的方式经过 Charles，然后 Charles 的流量代理到 BP，所以 Proxifier 是本次环境搭建的核心，实际上直接使用 Proxifier+Burpsuite 也是可以的。
+PS:wsl 会和 Proxifier 冲突，解决方法参考：<a target="_blank" rel="noopener" href="https://github.com/dyingsu/nolsp">https://github.com/dyingsu/nolsp</a></p>
+<h2 id="charles"><a class="markdownIt-Anchor" href="#charles"></a> Charles</h2>
+<p>Charles 是在 PC 端常用的网络封包截取工具，在做移动开发时，我们为了调试与服务器端的网络通讯协议，常常需要截取网络封包来分析。除了在做移动开发中调试端口外，Charles 也可以用于分析第三方应用的通讯协议。配合 Charles 的 SSL 功能，Charles 还可以分析 Https 协议。
+Charles 主要的功能包括：</p>
+<ul>
+<li>截取 Http 和 Https 网络封包。</li>
+<li>支持重发网络请求，方便后端调试。</li>
+<li>支持修改网络请求参数。</li>
+<li>支持网络请求的截获并动态修改。</li>
+<li>支持模拟慢速网络。</li>
+</ul>
+<p>注意一点就是抓 HTTPS 的流量需要安装 Charles 证书到受信任的根证书颁发机构。</p>
+<p>文章中提到反向代理，扫盲文章：</p>
+<h2 id="burpsuite"><a class="markdownIt-Anchor" href="#burpsuite"></a> Burpsuite</h2>
+<p>dddd</p>
+<h2 id="fiddler"><a class="markdownIt-Anchor" href="#fiddler"></a> Fiddler</h2>
+<p>还是 🐏 的攻略，这里使用 Fiddler 进行抓包，之前没接触过，看到 FiddlerScript 比较感兴趣，浅试了一下。
+3.4.1 破解见附件
+用法：</p>
+<h1 id="代理链"><a class="markdownIt-Anchor" href="#代理链"></a> 代理链</h1>
+<p>流量会从小程序会通过 Proxifier 走到 Charles 工具，然后 Charles 走代理到 Burpsuite，最后使用 Burpsuite 来进行修改和重放，其实就是走了一个代理链（多级转发代理），上手试一遍就基本会了。
+不过在搜代理链时，看到更多的是逃避检测，tor，洋葱路由，暗网技术，瞬间来劲了。</p>
+<h3 id="tor"><a class="markdownIt-Anchor" href="#tor"></a> Tor</h3>
+<p>Tor 是什么？The Onion Router，洋葱路由，一个软件。Tor 是一个三重代理，Tor 客户端先与目录服务器通信获得全球活动中继节点信息，然后再随机选择三个节点组成电路(circuit)，用户流量跳跃这三个节点(hop)之后最终到达目标网站服务器，这样 Tor 网络中就有两种实体，分别是用户和中继节点。
+当用户需要匿名访问网络时，首先访问目录服务器，得到全球的 Tor 中继节点的信息，包括 IP 地址、公钥、出口策略、带宽和在线时间等。然后再随机选择三个节点组成电路(circuit)，分别为入口节点、中间节点和出口节点。在构建电路时，用户和每一个中继节点协商共享的会话密钥，之后将层层加密的信息发送到电路中，每个中继节点经过一次解密后，将信息发给下一个节点。这样，中继节点中只有入口节点知道通信发起者的身份。中间节点知道通道中入口节点和出口节点的身份，但是不知道匿名通信发起者和接收者的身份。出口节点作为网关负责 Tor 网络和外部 Internet 网络的应用层连接，并充当加密的 Tor 网络传输流量和非加密的 Internet 传输流量之间的中继，知道匿名通信接收者的身份。在这种设计下，电路中没有任何一个节点知道完整的信息，因此实现了匿名通信。
+更多细节可以参考：
+单从逃避检测，防止溯源上来说，该文章简单介绍了如何利用 tor 来隐藏 vps 的 ip、
+该文章介绍用公共代理（试过了，用不了，暂时没有解决方法）和 ProxyChains 实现匿名，随便搜的，质量一般，有空可以试一下。作用是在前期信息收集时可以更好的隐藏 ip，缺点肯定是比较慢吧，还有感觉用 tor 的话应该都是国外 ip，比较明显，不知道国内 tor 环境咋样。</p>
+<h1 id="证书与-ca"><a class="markdownIt-Anchor" href="#证书与-ca"></a> 证书与 CA</h1>
+<h2 id="证书"><a class="markdownIt-Anchor" href="#证书"></a> 证书</h2>
+<p>众所周知，http 服务是很不安全的，所以需要在 http 基础上提供加密、认证、完整性保护的 https 服务。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fjro2r2Z1E0FcJcouhCFbiFruCi4.png" alt="" />
+图源：HTTP 图解 7.2.1</p>
+<p>HTTPS 并非是应用层的一种新协议。只是 HTTP 通信接口部分用 SSL（SecureSocketLayer）和 TLS（TransportLayerSecurity）协议代替而已。通常，HTTP 直接和 TCP 通信。当使用 SSL 时，则演变成先和 SSL 通信，再由 SSL 和 TCP 通信了。简言之，所谓 HTTPS，其实就是身披 SSL 协议这层外壳的 HTTP。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnatvsZAWzeM4BA_AqxM_ga4EN3S.png" alt="" />
+SSL 加密采用非对称加密体制（公钥加密）来交换会话密钥，为了确保公钥来源的可靠性（公钥没有被攻击者替换），这就需要一个可靠可信的 CA（数字证书认证机构，Certificate Authority）负责发放和管理数字证书，承担公钥体系中公钥的合法性检验的责任。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlVis-fQX5ZCu3uVAY25ygBsYTX7.png" alt="" />
+服务器会将这份由数字证书认证机构颁发的公钥证书发送给客户端，以进行公开密钥加密方式通信。公钥证书也可叫做数字证书或直接称为证书。所以这里就需要一个可信的数字证书认证机构，通过 CA 的可信度来推得证书的可信度。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuZQKFe7VsBSuCe2K6yZecz2KKuR.png" alt="" /></p>
+<h2 id="bp-的-https-交互过程"><a class="markdownIt-Anchor" href="#bp-的-https-交互过程"></a> BP 的 https 交互过程</h2>
+<p>BurpSuite 的基本思路是伪装成目标 https 服务器（中间人攻击），让浏览器（client）相信 BurpSuite 就是目标站点。为了达成目标，BurpSuite 必须：</p>
+<ul>
+<li>生成一对公私钥，并将公钥和目标域名绑定并封装为证书；</li>
+<li>让浏览器相信此证书，即通过证书验证。</li>
+</ul>
+<p>所以， BurpSuite 需要在操作系统添加一个根证书，这个根证书可以让浏览器信任所有 BurpSuite 颁发的证书。具体流程如下：</p>
+<pre><code>Client                     			BurpSuite                            	 Server
+|-----https(tcp 443) req------&gt; |
+</code></pre>
+<p>Generate an certificate1 boundwith the target domain
+|&lt;------ -certificate1----------&gt;|
+|&lt;-------SSL negotiation--------&gt;|
+|&lt;-----security connection------&gt;|
+| -------https(tcp 443) req----------&gt;|
+|&lt;-------certificate2----------------&gt;|
+|&lt;----------SSL connection--------&gt;|
+|&lt;-------security connection------&gt;|
+之后，BurpSuite 拥有了两套对称密钥，一套用于与 client 交互，另外一套与 server 交互，而在 BurpSuite 处可以获得 https 明文。</p>
+<h2 id="windows-证书存储"><a class="markdownIt-Anchor" href="#windows-证书存储"></a> Windows 证书存储</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fq-_W6yTILAzRE0qD8Y140IffWVG.png" alt="" />
+每个 windows 系统证书存储具有以下类型：</p>
+<ul>
+<li>本地计算机证书存储这种类型的证书存储是计算机的本地证书存储，并且对于计算机上的所有用户都是全局性的。 此证书存储位于注册表中 HKEY_LOCAL_MACHINE 根下。</li>
+<li>当前用户证书存储此类型的证书存储区是计算机上用户帐户的本地证书。 此证书存储位于注册表中 HKEY_CURRENT_USER 根下。</li>
+</ul>
+<p>当前 用户/个人存储区之外 的所有当前用户证书存储都将继承本地计算机证书存储的内容。
+Windows 的 PnP 管理器验证成功数字签名的条件：</p>
+<ul>
+<li>用于创建签名的签名证书由 CA 颁发。</li>
+<li>CA 对应的根证书安装在 &quot; <strong>受信任的根证书颁发机构</strong>&quot; 证书存储中，&quot;受信任的根证书颁发机构&quot; 证书存储包含所有 Windows 信任的 ca 的根证书。</li>
+</ul>
+<p>所以一般抓 HTTPS 流量代理软件的证书需要安装到<code>受信任的根证书颁发机构</code>。
+其他存储位置：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FliSX0VFSGNBfR6mCPIAfGiHXVvR.png" alt="" /></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/26/%E7%BD%91%E9%BC%8E%E6%9D%AF2022%20%E9%9D%92%E9%BE%99%E7%BB%84%20Crypto405%20WP/" rel="prev" title="网鼎杯2022 青龙组 Crypto405 WP">
+                  <i class="fa fa-chevron-left"></i> 网鼎杯2022 青龙组 Crypto405 WP
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c4ooc0</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">19k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"per_page":true,"tags":"none","engine":"mathjax","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="exif" type="application/json">"{FocalLength}mm f/{FNumber} {ExposureTime}s"</script>
+<script src="https://fastly.jsdelivr.net/npm/exif-js@2/exif.min.js"></script>
+<script src="/lib/exif.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>

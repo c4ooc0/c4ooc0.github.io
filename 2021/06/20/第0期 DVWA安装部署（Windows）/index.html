@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Damn Vulnerable Web Application（DVWA）是一个非常脆弱的 PHP&#x2F;MySQL Web 应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助 web 开发人员更好地理解保护 web 应用程序的过程，并帮助学生和教师在受控教室环境中学习 web 应用程序安全。 看 DVWA 首页似乎推荐部署在虚拟机里，有机会改一下  第一步 下载 phpst">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第0期 DVWA安装部署（Windows）">
+<meta property="og:url" content="https://c4ooc0.github.io/2021/06/20/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/index.html">
+<meta property="og:site_name" content="c4ooc0个人博客">
+<meta property="og:description" content="Damn Vulnerable Web Application（DVWA）是一个非常脆弱的 PHP&#x2F;MySQL Web 应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助 web 开发人员更好地理解保护 web 应用程序的过程，并帮助学生和教师在受控教室环境中学习 web 应用程序安全。 看 DVWA 首页似乎推荐部署在虚拟机里，有机会改一下  第一步 下载 phpst">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnXzqpOWpbWzngKRymUsIQrAVe1P.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuH_W7zP0OSuFCifaaZJZ6NKDbmu.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fp-2-PYcQuLviIV0FTZt0BiSy83P.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuqtscdXrTam_YH8izkIOQg9WlNa.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FrVZ0ILD0H1AVXkc8HPuCMQ6Ua-W.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fv4FaGWFMoiZo84RcjA30akRRrVZ.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FqDrERtj99DZcWaFEiVMEkl3K13j.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiDJc3iAwimLMfDjaOaiSZK1pgv4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FvJustiAjf3Zk68qrynim66ZJQzJ.png">
+<meta property="article:published_time" content="2021-06-20T08:42:10.000Z">
+<meta property="article:modified_time" content="2022-11-10T08:11:51.982Z">
+<meta property="article:author" content="c4ooc0">
+<meta property="article:tag" content="安全 瞎折腾">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnXzqpOWpbWzngKRymUsIQrAVe1P.png">
+
+
+<link rel="canonical" href="https://c4ooc0.github.io/2021/06/20/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://c4ooc0.github.io/2021/06/20/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/","path":"2021/06/20/第0期 DVWA安装部署（Windows）/","title":"第0期 DVWA安装部署（Windows）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第0期 DVWA安装部署（Windows） | c4ooc0个人博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">c4ooc0个人博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">半吊子的安全工程师，ACG爱好者</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5-%E4%B8%8B%E8%BD%BD-phpstudy-%E5%B9%B6%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text"> 第一步 下载 phpstudy 并安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5-%E4%B8%8B%E8%BD%BD-dvwa-%E6%BA%90%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text"> 第二步 下载 DVWA 源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text"> 第三步 创建数据库</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">c4ooc0</p>
+  <div class="site-description" itemprop="description">永怀谦卑与求知欲</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/c4ooc0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;c4ooc0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/choocolate-yqwd/blog" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;choocolate-yqwd&#x2F;blog" rel="noopener" target="_blank">语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友友们
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://macshuo.com/" title="http:&#x2F;&#x2F;macshuo.com&#x2F;" rel="noopener" target="_blank">testLink</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2021/06/20/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第0期 DVWA安装部署（Windows） | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第0期 DVWA安装部署（Windows）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-06-20 16:42:10" itemprop="dateCreated datePublished" datetime="2021-06-20T16:42:10+08:00">2021-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 16:11:51" itemprop="dateModified" datetime="2022-11-10T16:11:51+08:00">2022-11-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>414</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Damn Vulnerable Web Application（DVWA）是一个非常脆弱的 PHP/MySQL Web 应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助 web 开发人员更好地理解保护 web 应用程序的过程，并帮助学生和教师在受控教室环境中学习 web 应用程序安全。
+看 DVWA 首页似乎推荐部署在虚拟机里，有机会改一下</p>
+<h1 id="第一步-下载-phpstudy-并安装"><a class="markdownIt-Anchor" href="#第一步-下载-phpstudy-并安装"></a> 第一步 下载 phpstudy 并安装</h1>
+<p><code>https://www.xp.cn/download.html</code>
+解压后进行安装，一般装在 D 盘问题不大。
+安装完成后，浏览器访问<code>127.0.0.1</code>，看到如下界面即安装成功。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnXzqpOWpbWzngKRymUsIQrAVe1P.png" alt="" /></p>
+<h1 id="第二步-下载-dvwa-源码"><a class="markdownIt-Anchor" href="#第二步-下载-dvwa-源码"></a> 第二步 下载 DVWA 源码</h1>
+<p><code>https://github.com/digininja/DVWA</code>
+或者使用命令：
+<code>git clone https://github.com/digininja/DVWA.git</code>
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuH_W7zP0OSuFCifaaZJZ6NKDbmu.png" alt="" />
+打开 phpstudy 网站的根目录，在 phpstudy 的安装目录下，路径一般是<code>...\phpstudy_pro\WWW</code>。
+将解压后的 DVWA 文件夹复制到该目录。方便期间，DVWA-master 文件可以改名为 DVWA，以下以改名为前提进行演示。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fp-2-PYcQuLviIV0FTZt0BiSy83P.png" alt="" />
+DVWA-&gt;config-&gt;config.inc.php.dist 文件，修改后缀名为 ini.php。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuqtscdXrTam_YH8izkIOQg9WlNa.png" alt="" /> **-&gt; **<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FrVZ0ILD0H1AVXkc8HPuCMQ6Ua-W.png" alt="" />
+打开该文件，修改数据库密码。
+首先查看 phpstudy 中的数据库密码，鼠标移到密码处就显示了。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fv4FaGWFMoiZo84RcjA30akRRrVZ.png" alt="" />
+将 db_user 改为 root，db_password 根据 phpstudy 显示的改，我这里是 123456。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FqDrERtj99DZcWaFEiVMEkl3K13j.png" alt="" /></p>
+<h1 id="第三步-创建数据库"><a class="markdownIt-Anchor" href="#第三步-创建数据库"></a> 第三步 创建数据库</h1>
+<p>浏览器访问<code>127.0.0.1/DVWA/setup.php</code>，找到最后，创建数据库。(这里如果失败，一般就是数据库名或者密码不对，看一下 phpstudy 的数据库设置就知道了)
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiDJc3iAwimLMfDjaOaiSZK1pgv4.png" alt="" />  -&gt;  <img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FvJustiAjf3Zk68qrynim66ZJQzJ.png" alt="" />
+访问<code>http://127.0.0.1/DVWA/index.php</code> 进行登录，用户名/密码：admin/password。登陆成功后，DVWA 就可以正常使用了。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/09/28/VScode%20%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%8E%AF%E5%A2%83/" rel="next" title="VScode 配置远程开发C语言程序环境">
+                  VScode 配置远程开发C语言程序环境 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c4ooc0</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">19k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"per_page":true,"tags":"none","engine":"mathjax","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="exif" type="application/json">"{FocalLength}mm f/{FNumber} {ExposureTime}s"</script>
+<script src="https://fastly.jsdelivr.net/npm/exif-js@2/exif.min.js"></script>
+<script src="/lib/exif.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>

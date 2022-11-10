@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="我是菜鸡，只做出来密码学的题 1551  分析源码： 12345678910p &#x3D; getPrime(16)k &#x3D; [randrange(1,p) for i in range(5)]for i in range(len(flag)):    grasshopper &#x3D; flag[i]    for j in range(5):        k[j] &#x3D; grasshopper &#x3D; grass">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网鼎杯2022 青龙组 Crypto405 WP">
+<meta property="og:url" content="https://c4ooc0.github.io/2022/08/26/%E7%BD%91%E9%BC%8E%E6%9D%AF2022%20%E9%9D%92%E9%BE%99%E7%BB%84%20Crypto405%20WP/index.html">
+<meta property="og:site_name" content="c4ooc0个人博客">
+<meta property="og:description" content="我是菜鸡，只做出来密码学的题 1551  分析源码： 12345678910p &#x3D; getPrime(16)k &#x3D; [randrange(1,p) for i in range(5)]for i in range(len(flag)):    grasshopper &#x3D; flag[i]    for j in range(5):        k[j] &#x3D; grasshopper &#x3D; grass">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fsk_TPt_bmxNh3MWphM-kHdqhz7G.png">
+<meta property="article:published_time" content="2022-08-26T09:42:54.000Z">
+<meta property="article:modified_time" content="2022-11-10T08:09:55.526Z">
+<meta property="article:author" content="c4ooc0">
+<meta property="article:tag" content="安全 瞎折腾">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fsk_TPt_bmxNh3MWphM-kHdqhz7G.png">
+
+
+<link rel="canonical" href="https://c4ooc0.github.io/2022/08/26/%E7%BD%91%E9%BC%8E%E6%9D%AF2022%20%E9%9D%92%E9%BE%99%E7%BB%84%20Crypto405%20WP/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://c4ooc0.github.io/2022/08/26/%E7%BD%91%E9%BC%8E%E6%9D%AF2022%20%E9%9D%92%E9%BE%99%E7%BB%84%20Crypto405%20WP/","path":"2022/08/26/网鼎杯2022 青龙组 Crypto405 WP/","title":"网鼎杯2022 青龙组 Crypto405 WP"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>网鼎杯2022 青龙组 Crypto405 WP | c4ooc0个人博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">c4ooc0个人博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">半吊子的安全工程师，ACG爱好者</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">c4ooc0</p>
+  <div class="site-description" itemprop="description">永怀谦卑与求知欲</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/c4ooc0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;c4ooc0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/choocolate-yqwd/blog" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;choocolate-yqwd&#x2F;blog" rel="noopener" target="_blank">语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友友们
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://macshuo.com/" title="http:&#x2F;&#x2F;macshuo.com&#x2F;" rel="noopener" target="_blank">testLink</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/08/26/%E7%BD%91%E9%BC%8E%E6%9D%AF2022%20%E9%9D%92%E9%BE%99%E7%BB%84%20Crypto405%20WP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="网鼎杯2022 青龙组 Crypto405 WP | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网鼎杯2022 青龙组 Crypto405 WP
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-26 17:42:54" itemprop="dateCreated datePublished" datetime="2022-08-26T17:42:54+08:00">2022-08-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 16:09:55" itemprop="dateModified" datetime="2022-11-10T16:09:55+08:00">2022-11-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>我是菜鸡，只做出来密码学的题 1551</p>
+</blockquote>
+<p>分析源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">p = <span class="title function_ invoke__">getPrime</span>(<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">k = [<span class="title function_ invoke__">randrange</span>(<span class="number">1</span>,p) <span class="keyword">for</span> i in <span class="title function_ invoke__">range</span>(<span class="number">5</span>)]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in <span class="title function_ invoke__">range</span>(<span class="title function_ invoke__">len</span>(flag)):</span><br><span class="line">    grasshopper = flag[i]</span><br><span class="line">    <span class="keyword">for</span> j in <span class="title function_ invoke__">range</span>(<span class="number">5</span>):</span><br><span class="line">        k[j] = grasshopper = grasshopper * k[j] % p</span><br><span class="line">    <span class="keyword">print</span>(<span class="string">&#x27;Grasshopper#&#x27;</span>+<span class="title function_ invoke__">str</span>(i).<span class="title function_ invoke__">zfill</span>(<span class="number">2</span>)+<span class="string">&#x27;:&#x27;</span>+<span class="title function_ invoke__">hex</span>(grasshopper)[<span class="number">2</span>:].<span class="title function_ invoke__">zfill</span>(<span class="number">4</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>p 是一个未知 16bit 素数，k 是五个随机数组成的队列。进入到循环是五次模乘，输出该行最后一个结果。
+如果将所有的 k 列表组成一个 41*5 的矩阵 K，那么最后的输出结果就是该矩阵的最后一列。根据 output.txt，可以获得最后一列的数据。从 output.txt 中获取数据并转成十进制整型数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;out.txt&quot;</span>, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        grass.append(<span class="built_in">int</span>(<span class="string">&quot;0x&quot;</span> + line.split(<span class="string">b&quot;:&quot;</span>)[<span class="number">1</span>].split()[<span class="number">0</span>].decode(), <span class="number">16</span>))</span><br></pre></td></tr></table></figure>
+<p>然后根据<code>k[j] = grasshopper = grasshopper * k[j] % p</code>，可以推的 K[i][j]_K[i-1][j+1]=K[i][j+1] mod p
+由此可以推的第四列数据：K[i][4] _ K[i-1][5] = K[i][5] mod p (i&gt;1)，已知 K[i-1][5]和 K[i][5] ，编写代码求得 k[i][4] i&gt;1：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def <span class="title function_ invoke__">findFactor</span>(before, after, p):</span><br><span class="line">    i = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> (before + p * i) % after != <span class="number">0</span>:</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> (before + p * i) / after</span><br></pre></td></tr></table></figure>
+<p>以此类推，可以求得第 1~4 列的数据，除了 K[0][0]<sub>K[0][3],K[1][0]</sub>K[1][2],K[2][0]~K[2][1],K[3][0]由于初始 k 列表未知不可获得。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">k_box = []</span><br><span class="line"><span class="built_in">print</span>(p)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">42</span>):</span><br><span class="line">	line = [<span class="number">0</span>] * <span class="number">5</span></span><br><span class="line">	line[<span class="number">4</span>] = grass[i]</span><br><span class="line">	k_box.append(line)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">41</span>):</span><br><span class="line">	k_box[i + <span class="number">1</span>][<span class="number">3</span>] = (findFactor(k_box[i + <span class="number">1</span>][<span class="number">4</span>], k_box[i][<span class="number">4</span>], p))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>):</span><br><span class="line">	k_box[i + <span class="number">2</span>][<span class="number">2</span>] = (findFactor(k_box[i + <span class="number">2</span>][<span class="number">3</span>], k_box[i + <span class="number">1</span>][<span class="number">3</span>], p))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">39</span>):</span><br><span class="line">	k_box[i + <span class="number">3</span>][<span class="number">1</span>] = (findFactor(k_box[i + <span class="number">3</span>][<span class="number">2</span>], k_box[i + <span class="number">2</span>][<span class="number">2</span>], p))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">38</span>):</span><br><span class="line">	k_box[i + <span class="number">4</span>][<span class="number">0</span>] = (findFactor(k_box[i + <span class="number">4</span>][<span class="number">1</span>], k_box[i + <span class="number">3</span>][<span class="number">1</span>], p))</span><br></pre></td></tr></table></figure>
+<p>再次回顾<code>K[j] = grasshopper = grasshopper * K[j] % p</code>，flag[i]* K[i-1][0] % p = K[i][0]，所以由 K[i-1][0]和 K[i][0]已经求得，即可推出 flag[i],i&gt;4。不过因为 flag 格式已知，前五位是<code>flag&#123;</code>。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">res = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>, <span class="number">41</span>):</span><br><span class="line">	res.append(<span class="built_in">int</span>(findFactor(k_box[i + <span class="number">1</span>][<span class="number">0</span>], k_box[i][<span class="number">0</span>], p)))</span><br></pre></td></tr></table></figure>
+<p>还有最后一个问题，p 未知，直接生成比 K 矩阵最后一列所有数据都大（58767）的 16 位素数列表：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import math</span><br><span class="line"></span><br><span class="line">primes = []</span><br><span class="line"><span class="keyword">for</span> i in <span class="title function_ invoke__">range</span>(<span class="number">58769</span>, <span class="number">2</span> ** <span class="number">16</span>):</span><br><span class="line">    primes.<span class="title function_ invoke__">append</span>(i)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in <span class="title function_ invoke__">range</span>(<span class="number">58769</span>, <span class="number">2</span> ** <span class="number">16</span>):</span><br><span class="line">    j = <span class="number">2</span></span><br><span class="line">    jud = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j in <span class="title function_ invoke__">range</span>(<span class="number">2</span>, <span class="title function_ invoke__">round</span>(math.<span class="title function_ invoke__">sqrt</span>(i)) + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span> i % j != <span class="number">0</span>:</span><br><span class="line">            j = j + <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            jud = <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> jud == <span class="number">0</span>:</span><br><span class="line">        primes.<span class="title function_ invoke__">remove</span>(i)</span><br></pre></td></tr></table></figure>
+<p>遍历解密，如果成功解密，即找到素数 p，解密结果即 flag。
+全部代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># import math</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># primes = []</span></span><br><span class="line"><span class="comment"># for i in range(58769, 2 ** 16):</span></span><br><span class="line"><span class="comment">#     primes.append(i)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># for i in range(58769, 2 ** 16):</span></span><br><span class="line"><span class="comment">#     j = 2</span></span><br><span class="line"><span class="comment">#     jud = 1</span></span><br><span class="line"><span class="comment">#     for j in range(2, round(math.sqrt(i)) + 1):</span></span><br><span class="line"><span class="comment">#         if i % j != 0:</span></span><br><span class="line"><span class="comment">#             j = j + 1</span></span><br><span class="line"><span class="comment">#         else:</span></span><br><span class="line"><span class="comment">#             jud = 0</span></span><br><span class="line"><span class="comment">#     if jud == 0:</span></span><br><span class="line"><span class="comment">#         primes.remove(i)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">findFactor</span>(<span class="params">before, after, p</span>):</span><br><span class="line">    i = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> (before + p * i) % after != <span class="number">0</span>:</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> (before + p * i) / after</span><br><span class="line"></span><br><span class="line">grass = []</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;out.txt&quot;</span>, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        grass.append(<span class="built_in">int</span>(<span class="string">&quot;0x&quot;</span> + line.split(<span class="string">b&quot;:&quot;</span>)[<span class="number">1</span>].split()[<span class="number">0</span>].decode(), <span class="number">16</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">max</span>(grass))</span><br><span class="line"></span><br><span class="line">primes = [<span class="number">58771</span>, <span class="number">58787</span>, <span class="number">58789</span>, <span class="number">58831</span>,</span><br><span class="line">          <span class="number">58889</span>, <span class="number">58897</span>, <span class="number">58901</span>, <span class="number">58907</span>, <span class="number">58909</span>, <span class="number">58913</span>, <span class="number">58921</span>, <span class="number">58937</span>, <span class="number">58943</span>, <span class="number">58963</span>, <span class="number">58967</span>, <span class="number">58979</span>, <span class="number">58991</span>, <span class="number">58997</span>, <span class="number">59009</span>,</span><br><span class="line">          <span class="number">59011</span>, <span class="number">59021</span>, <span class="number">59023</span>, <span class="number">59029</span>, <span class="number">59051</span>, <span class="number">59053</span>, <span class="number">59063</span>, <span class="number">59069</span>, <span class="number">59077</span>, <span class="number">59083</span>, <span class="number">59093</span>, <span class="number">59107</span>, <span class="number">59113</span>, <span class="number">59119</span>, <span class="number">59123</span>,</span><br><span class="line">          <span class="number">59141</span>, <span class="number">59149</span>, <span class="number">59159</span>, <span class="number">59167</span>, <span class="number">59183</span>, <span class="number">59197</span>, <span class="number">59207</span>, <span class="number">59209</span>, <span class="number">59219</span>, <span class="number">59221</span>, <span class="number">59233</span>, <span class="number">59239</span>, <span class="number">59243</span>, <span class="number">59263</span>, <span class="number">59273</span>,</span><br><span class="line">          <span class="number">59281</span>, <span class="number">59333</span>, <span class="number">59341</span>, <span class="number">59351</span>, <span class="number">59357</span>, <span class="number">59359</span>, <span class="number">59369</span>, <span class="number">59377</span>, <span class="number">59387</span>, <span class="number">59393</span>, <span class="number">59399</span>, <span class="number">59407</span>, <span class="number">59417</span>, <span class="number">59419</span>, <span class="number">59441</span>,</span><br><span class="line">          <span class="number">59443</span>, <span class="number">59447</span>, <span class="number">59453</span>, <span class="number">59467</span>, <span class="number">59471</span>, <span class="number">59473</span>, <span class="number">59497</span>, <span class="number">59509</span>, <span class="number">59513</span>, <span class="number">59539</span>, <span class="number">59557</span>, <span class="number">59561</span>, <span class="number">59567</span>, <span class="number">59581</span>, <span class="number">59611</span>,</span><br><span class="line">          <span class="number">59617</span>, <span class="number">59621</span>, <span class="number">59627</span>, <span class="number">59629</span>, <span class="number">59651</span>, <span class="number">59659</span>, <span class="number">59663</span>, <span class="number">59669</span>, <span class="number">59671</span>, <span class="number">59693</span>, <span class="number">59699</span>, <span class="number">59707</span>, <span class="number">59723</span>, <span class="number">59729</span>, <span class="number">59743</span>,</span><br><span class="line">          <span class="number">59747</span>, <span class="number">59753</span>, <span class="number">59771</span>, <span class="number">59779</span>, <span class="number">59791</span>, <span class="number">59797</span>, <span class="number">59809</span>, <span class="number">59833</span>, <span class="number">59863</span>, <span class="number">59879</span>, <span class="number">59887</span>, <span class="number">59921</span>, <span class="number">59929</span>, <span class="number">59951</span>, <span class="number">59957</span>,</span><br><span class="line">          <span class="number">59971</span>, <span class="number">59981</span>, <span class="number">59999</span>, <span class="number">60013</span>, <span class="number">60017</span>, <span class="number">60029</span>, <span class="number">60037</span>, <span class="number">60041</span>, <span class="number">60077</span>, <span class="number">60083</span>, <span class="number">60089</span>, <span class="number">60091</span>, <span class="number">60101</span>, <span class="number">60103</span>, <span class="number">60107</span>,</span><br><span class="line">          <span class="number">60127</span>, <span class="number">60133</span>, <span class="number">60139</span>, <span class="number">60149</span>, <span class="number">60161</span>, <span class="number">60167</span>, <span class="number">60169</span>, <span class="number">60209</span>, <span class="number">60217</span>, <span class="number">60223</span>, <span class="number">60251</span>, <span class="number">60257</span>, <span class="number">60259</span>, <span class="number">60271</span>, <span class="number">60289</span>,</span><br><span class="line">          <span class="number">60293</span>, <span class="number">60317</span>, <span class="number">60331</span>, <span class="number">60337</span>, <span class="number">60343</span>, <span class="number">60353</span>, <span class="number">60373</span>, <span class="number">60383</span>, <span class="number">60397</span>, <span class="number">60413</span>, <span class="number">60427</span>, <span class="number">60443</span>, <span class="number">60449</span>, <span class="number">60457</span>, <span class="number">60493</span>,</span><br><span class="line">          <span class="number">60497</span>, <span class="number">60509</span>, <span class="number">60521</span>, <span class="number">60527</span>, <span class="number">60539</span>, <span class="number">60589</span>, <span class="number">60601</span>, <span class="number">60607</span>, <span class="number">60611</span>, <span class="number">60617</span>, <span class="number">60623</span>, <span class="number">60631</span>, <span class="number">60637</span>, <span class="number">60647</span>, <span class="number">60649</span>,</span><br><span class="line">          <span class="number">60659</span>, <span class="number">60661</span>, <span class="number">60679</span>, <span class="number">60689</span>, <span class="number">60703</span>, <span class="number">60719</span>, <span class="number">60727</span>, <span class="number">60733</span>, <span class="number">60737</span>, <span class="number">60757</span>, <span class="number">60761</span>, <span class="number">60763</span>, <span class="number">60773</span>, <span class="number">60779</span>, <span class="number">60793</span>,</span><br><span class="line">          <span class="number">60811</span>, <span class="number">60821</span>, <span class="number">60859</span>, <span class="number">60869</span>, <span class="number">60887</span>, <span class="number">60889</span>, <span class="number">60899</span>, <span class="number">60901</span>, <span class="number">60913</span>, <span class="number">60917</span>, <span class="number">60919</span>, <span class="number">60923</span>, <span class="number">60937</span>, <span class="number">60943</span>, <span class="number">60953</span>,</span><br><span class="line">          <span class="number">60961</span>, <span class="number">61001</span>, <span class="number">61007</span>, <span class="number">61027</span>, <span class="number">61031</span>, <span class="number">61043</span>, <span class="number">61051</span>, <span class="number">61057</span>, <span class="number">61091</span>, <span class="number">61099</span>, <span class="number">61121</span>, <span class="number">61129</span>, <span class="number">61141</span>, <span class="number">61151</span>, <span class="number">61153</span>,</span><br><span class="line">          <span class="number">61169</span>, <span class="number">61211</span>, <span class="number">61223</span>, <span class="number">61231</span>, <span class="number">61253</span>, <span class="number">61261</span>, <span class="number">61283</span>, <span class="number">61291</span>, <span class="number">61297</span>, <span class="number">61331</span>, <span class="number">61333</span>, <span class="number">61339</span>, <span class="number">61343</span>, <span class="number">61357</span>, <span class="number">61363</span>,</span><br><span class="line">          <span class="number">61379</span>, <span class="number">61381</span>, <span class="number">61403</span>, <span class="number">61409</span>, <span class="number">61417</span>, <span class="number">61441</span>, <span class="number">61463</span>, <span class="number">61469</span>, <span class="number">61471</span>, <span class="number">61483</span>, <span class="number">61487</span>, <span class="number">61493</span>, <span class="number">61507</span>, <span class="number">61511</span>, <span class="number">61519</span>,</span><br><span class="line">          <span class="number">61543</span>, <span class="number">61547</span>, <span class="number">61553</span>, <span class="number">61559</span>, <span class="number">61561</span>, <span class="number">61583</span>, <span class="number">61603</span>, <span class="number">61609</span>, <span class="number">61613</span>, <span class="number">61627</span>, <span class="number">61631</span>, <span class="number">61637</span>, <span class="number">61643</span>, <span class="number">61651</span>, <span class="number">61657</span>,</span><br><span class="line">          <span class="number">61667</span>, <span class="number">61673</span>, <span class="number">61681</span>, <span class="number">61687</span>, <span class="number">61703</span>, <span class="number">61717</span>, <span class="number">61723</span>, <span class="number">61729</span>, <span class="number">61751</span>, <span class="number">61757</span>, <span class="number">61781</span>, <span class="number">61813</span>, <span class="number">61819</span>, <span class="number">61837</span>, <span class="number">61843</span>,</span><br><span class="line">          <span class="number">61861</span>, <span class="number">61871</span>, <span class="number">61879</span>, <span class="number">61909</span>, <span class="number">61927</span>, <span class="number">61933</span>, <span class="number">61949</span>, <span class="number">61961</span>, <span class="number">61967</span>, <span class="number">61979</span>, <span class="number">61981</span>, <span class="number">61987</span>, <span class="number">61991</span>, <span class="number">62003</span>, <span class="number">62011</span>,</span><br><span class="line">          <span class="number">62017</span>, <span class="number">62039</span>, <span class="number">62047</span>, <span class="number">62053</span>, <span class="number">62057</span>, <span class="number">62071</span>, <span class="number">62081</span>, <span class="number">62099</span>, <span class="number">62119</span>, <span class="number">62129</span>, <span class="number">62131</span>, <span class="number">62137</span>, <span class="number">62141</span>, <span class="number">62143</span>, <span class="number">62171</span>,</span><br><span class="line">          <span class="number">62189</span>, <span class="number">62191</span>, <span class="number">62201</span>, <span class="number">62207</span>, <span class="number">62213</span>, <span class="number">62219</span>, <span class="number">62233</span>, <span class="number">62273</span>, <span class="number">62297</span>, <span class="number">62299</span>, <span class="number">62303</span>, <span class="number">62311</span>, <span class="number">62323</span>, <span class="number">62327</span>, <span class="number">62347</span>,</span><br><span class="line">          <span class="number">62351</span>, <span class="number">62383</span>, <span class="number">62401</span>, <span class="number">62417</span>, <span class="number">62423</span>, <span class="number">62459</span>, <span class="number">62467</span>, <span class="number">62473</span>, <span class="number">62477</span>, <span class="number">62483</span>, <span class="number">62497</span>, <span class="number">62501</span>, <span class="number">62507</span>, <span class="number">62533</span>, <span class="number">62539</span>,</span><br><span class="line">          <span class="number">62549</span>, <span class="number">62563</span>, <span class="number">62581</span>, <span class="number">62591</span>, <span class="number">62597</span>, <span class="number">62603</span>, <span class="number">62617</span>, <span class="number">62627</span>, <span class="number">62633</span>, <span class="number">62639</span>, <span class="number">62653</span>, <span class="number">62659</span>, <span class="number">62683</span>, <span class="number">62687</span>, <span class="number">62701</span>,</span><br><span class="line">          <span class="number">62723</span>, <span class="number">62731</span>, <span class="number">62743</span>, <span class="number">62753</span>, <span class="number">62761</span>, <span class="number">62773</span>, <span class="number">62791</span>, <span class="number">62801</span>, <span class="number">62819</span>, <span class="number">62827</span>, <span class="number">62851</span>, <span class="number">62861</span>, <span class="number">62869</span>, <span class="number">62873</span>, <span class="number">62897</span>,</span><br><span class="line">          <span class="number">62903</span>, <span class="number">62921</span>, <span class="number">62927</span>, <span class="number">62929</span>, <span class="number">62939</span>, <span class="number">62969</span>, <span class="number">62971</span>, <span class="number">62981</span>, <span class="number">62983</span>, <span class="number">62987</span>, <span class="number">62989</span>, <span class="number">63029</span>, <span class="number">63031</span>, <span class="number">63059</span>, <span class="number">63067</span>,</span><br><span class="line">          <span class="number">63073</span>, <span class="number">63079</span>, <span class="number">63097</span>, <span class="number">63103</span>, <span class="number">63113</span>, <span class="number">63127</span>, <span class="number">63131</span>, <span class="number">63149</span>, <span class="number">63179</span>, <span class="number">63197</span>, <span class="number">63199</span>, <span class="number">63211</span>, <span class="number">63241</span>, <span class="number">63247</span>, <span class="number">63277</span>,</span><br><span class="line">          <span class="number">63281</span>, <span class="number">63299</span>, <span class="number">63311</span>, <span class="number">63313</span>, <span class="number">63317</span>, <span class="number">63331</span>, <span class="number">63337</span>, <span class="number">63347</span>, <span class="number">63353</span>, <span class="number">63361</span>, <span class="number">63367</span>, <span class="number">63377</span>, <span class="number">63389</span>, <span class="number">63391</span>, <span class="number">63397</span>,</span><br><span class="line">          <span class="number">63409</span>, <span class="number">63419</span>, <span class="number">63421</span>, <span class="number">63439</span>, <span class="number">63443</span>, <span class="number">63463</span>, <span class="number">63467</span>, <span class="number">63473</span>, <span class="number">63487</span>, <span class="number">63493</span>, <span class="number">63499</span>, <span class="number">63521</span>, <span class="number">63527</span>, <span class="number">63533</span>, <span class="number">63541</span>,</span><br><span class="line">          <span class="number">63559</span>, <span class="number">63577</span>, <span class="number">63587</span>, <span class="number">63589</span>, <span class="number">63599</span>, <span class="number">63601</span>, <span class="number">63607</span>, <span class="number">63611</span>, <span class="number">63617</span>, <span class="number">63629</span>, <span class="number">63647</span>, <span class="number">63649</span>, <span class="number">63659</span>, <span class="number">63667</span>, <span class="number">63671</span>,</span><br><span class="line">          <span class="number">63689</span>, <span class="number">63691</span>, <span class="number">63697</span>, <span class="number">63703</span>, <span class="number">63709</span>, <span class="number">63719</span>, <span class="number">63727</span>, <span class="number">63737</span>, <span class="number">63743</span>, <span class="number">63761</span>, <span class="number">63773</span>, <span class="number">63781</span>, <span class="number">63793</span>, <span class="number">63799</span>, <span class="number">63803</span>,</span><br><span class="line">          <span class="number">63809</span>, <span class="number">63823</span>, <span class="number">63839</span>, <span class="number">63841</span>, <span class="number">63853</span>, <span class="number">63857</span>, <span class="number">63863</span>, <span class="number">63901</span>, <span class="number">63907</span>, <span class="number">63913</span>, <span class="number">63929</span>, <span class="number">63949</span>, <span class="number">63977</span>, <span class="number">63997</span>, <span class="number">64007</span>,</span><br><span class="line">          <span class="number">64013</span>, <span class="number">64019</span>, <span class="number">64033</span>, <span class="number">64037</span>, <span class="number">64063</span>, <span class="number">64067</span>, <span class="number">64081</span>, <span class="number">64091</span>, <span class="number">64109</span>, <span class="number">64123</span>, <span class="number">64151</span>, <span class="number">64153</span>, <span class="number">64157</span>, <span class="number">64171</span>, <span class="number">64187</span>,</span><br><span class="line">          <span class="number">64189</span>, <span class="number">64217</span>, <span class="number">64223</span>, <span class="number">64231</span>, <span class="number">64237</span>, <span class="number">64271</span>, <span class="number">64279</span>, <span class="number">64283</span>, <span class="number">64301</span>, <span class="number">64303</span>, <span class="number">64319</span>, <span class="number">64327</span>, <span class="number">64333</span>, <span class="number">64373</span>, <span class="number">64381</span>,</span><br><span class="line">          <span class="number">64399</span>, <span class="number">64403</span>, <span class="number">64433</span>, <span class="number">64439</span>, <span class="number">64451</span>, <span class="number">64453</span>, <span class="number">64483</span>, <span class="number">64489</span>, <span class="number">64499</span>, <span class="number">64513</span>, <span class="number">64553</span>, <span class="number">64567</span>, <span class="number">64577</span>, <span class="number">64579</span>, <span class="number">64591</span>,</span><br><span class="line">          <span class="number">64601</span>, <span class="number">64609</span>, <span class="number">64613</span>, <span class="number">64621</span>, <span class="number">64627</span>, <span class="number">64633</span>, <span class="number">64661</span>, <span class="number">64663</span>, <span class="number">64667</span>, <span class="number">64679</span>, <span class="number">64693</span>, <span class="number">64709</span>, <span class="number">64717</span>, <span class="number">64747</span>, <span class="number">64763</span>,</span><br><span class="line">          <span class="number">64781</span>, <span class="number">64783</span>, <span class="number">64793</span>, <span class="number">64811</span>, <span class="number">64817</span>, <span class="number">64849</span>, <span class="number">64853</span>, <span class="number">64871</span>, <span class="number">64877</span>, <span class="number">64879</span>, <span class="number">64891</span>, <span class="number">64901</span>, <span class="number">64919</span>, <span class="number">64921</span>, <span class="number">64927</span>,</span><br><span class="line">          <span class="number">64937</span>, <span class="number">64951</span>, <span class="number">64969</span>, <span class="number">64997</span>, <span class="number">65003</span>, <span class="number">65011</span>, <span class="number">65027</span>, <span class="number">65029</span>, <span class="number">65033</span>, <span class="number">65053</span>, <span class="number">65063</span>, <span class="number">65071</span>, <span class="number">65089</span>, <span class="number">65099</span>, <span class="number">65101</span>,</span><br><span class="line">          <span class="number">65111</span>, <span class="number">65119</span>, <span class="number">65123</span>, <span class="number">65129</span>, <span class="number">65141</span>, <span class="number">65147</span>, <span class="number">65167</span>, <span class="number">65171</span>, <span class="number">65173</span>, <span class="number">65179</span>, <span class="number">65183</span>, <span class="number">65203</span>, <span class="number">65213</span>, <span class="number">65239</span>, <span class="number">65257</span>,</span><br><span class="line">          <span class="number">65267</span>, <span class="number">65269</span>, <span class="number">65287</span>, <span class="number">65293</span>, <span class="number">65309</span>, <span class="number">65323</span>, <span class="number">65327</span>, <span class="number">65353</span>, <span class="number">65357</span>, <span class="number">65371</span>, <span class="number">65381</span>, <span class="number">65393</span>, <span class="number">65407</span>, <span class="number">65413</span>, <span class="number">65419</span>,</span><br><span class="line">          <span class="number">65423</span>, <span class="number">65437</span>, <span class="number">65447</span>, <span class="number">65449</span>, <span class="number">65479</span>, <span class="number">65497</span>, <span class="number">65519</span>, <span class="number">65521</span>]</span><br><span class="line"><span class="comment"># p = 59441</span></span><br><span class="line"><span class="comment"># primes=[59441]</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> primes:</span><br><span class="line">    k_box = []</span><br><span class="line">    <span class="built_in">print</span>(p)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">42</span>):</span><br><span class="line">        line = [<span class="number">0</span>] * <span class="number">5</span></span><br><span class="line">        line[<span class="number">4</span>] = grass[i]</span><br><span class="line">        k_box.append(line)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">41</span>):</span><br><span class="line">        k_box[i + <span class="number">1</span>][<span class="number">3</span>] = (findFactor(k_box[i + <span class="number">1</span>][<span class="number">4</span>], k_box[i][<span class="number">4</span>], p))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>):</span><br><span class="line">        k_box[i + <span class="number">2</span>][<span class="number">2</span>] = (findFactor(k_box[i + <span class="number">2</span>][<span class="number">3</span>], k_box[i + <span class="number">1</span>][<span class="number">3</span>], p))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">39</span>):</span><br><span class="line">        k_box[i + <span class="number">3</span>][<span class="number">1</span>] = (findFactor(k_box[i + <span class="number">3</span>][<span class="number">2</span>], k_box[i + <span class="number">2</span>][<span class="number">2</span>], p))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">38</span>):</span><br><span class="line">        k_box[i + <span class="number">4</span>][<span class="number">0</span>] = (findFactor(k_box[i + <span class="number">4</span>][<span class="number">1</span>], k_box[i + <span class="number">3</span>][<span class="number">1</span>], p))</span><br><span class="line">    <span class="comment"># for line in k_box:</span></span><br><span class="line">    <span class="comment">#     print(line)</span></span><br><span class="line">    res = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>, <span class="number">41</span>):</span><br><span class="line">        res.append(<span class="built_in">int</span>(findFactor(k_box[i + <span class="number">1</span>][<span class="number">0</span>], k_box[i][<span class="number">0</span>], p)))</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">max</span>(res) &lt; <span class="number">255</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">bytes</span>(res))</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<p>最后解出来<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fsk_TPt_bmxNh3MWphM-kHdqhz7G.png" alt="" />
+然后再拼上 flag{，最后为<code>flag&#123;749d39d4-78db-4c55-b4ff-bca873d0f18e&#125;</code></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/23/%E5%86%B0%E8%9D%8E%E6%BC%94%E5%8C%96%E5%8F%B2%E2%80%94%E2%80%94%E4%BB%A5php%E9%A9%AC%E4%B8%BA%E4%BE%8B/" rel="prev" title="冰蝎演化史——以php马为例">
+                  <i class="fa fa-chevron-left"></i> 冰蝎演化史——以php马为例
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/09/22/%E4%BB%8Epc%E7%AB%AF%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%AD%A6%E4%B9%A0%E4%BB%A3%E7%90%86%E9%93%BE%E5%92%8CCA%E8%AF%81%E4%B9%A6%20%E4%BB%A5%E7%BE%8A%E4%BA%86%E4%B8%AA%E7%BE%8A%E4%B8%BA%E4%BE%8B/" rel="next" title="从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例">
+                  从pc端微信小程序抓包环境搭建学习代理链和CA证书 以羊了个羊为例 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c4ooc0</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">19k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"per_page":true,"tags":"none","engine":"mathjax","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="exif" type="application/json">"{FocalLength}mm f/{FNumber} {ExposureTime}s"</script>
+<script src="https://fastly.jsdelivr.net/npm/exif-js@2/exif.min.js"></script>
+<script src="/lib/exif.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>

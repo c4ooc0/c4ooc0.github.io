@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="指纹库： json 化方法：  Nmap 服务检测流量分析 client 131 server130 端口[80,3306]，在 client 上运行 nmap，命令：nmap -sC -sV -p 80,3306 192.168.42.130 通信流量例子：  在 nmap 运行的 client 上会根据目标端口个数启用自身端口与之通信，例如目标端口[80,3306]，client 33776">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nmap服务识别指纹库利用">
+<meta property="og:url" content="https://c4ooc0.github.io/2022/07/19/Nmap%E6%9C%8D%E5%8A%A1%E8%AF%86%E5%88%AB%E6%8C%87%E7%BA%B9%E5%BA%93%E5%88%A9%E7%94%A8/index.html">
+<meta property="og:site_name" content="c4ooc0个人博客">
+<meta property="og:description" content="指纹库： json 化方法：  Nmap 服务检测流量分析 client 131 server130 端口[80,3306]，在 client 上运行 nmap，命令：nmap -sC -sV -p 80,3306 192.168.42.130 通信流量例子：  在 nmap 运行的 client 上会根据目标端口个数启用自身端口与之通信，例如目标端口[80,3306]，client 33776">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fn9fegmoXqic9Zbv3HoqAfwYrmWp.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FtDnEsJPkNbCIkESmM6-PaUBTX0C.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FhSk-BC04Nty0UXQkNwcSwWmjJAy.svg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Ft9P8YLkjGTupxGhL5wW96g3hTT8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlTwWmy8KOfL-xYR8gV4uTWJTZaP.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FpChNN70xKPetCpnY_Z5Zpxo5ZnV.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fp_pxRf1x6CcM3ZE8PCvipJf5edA.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnvqZrCoydXnttQzUPMBSFqRjvxP.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fl9dxqs5tRy3ArNCEX4uhdLhMhMS.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FkFftulHhJXTHxLHmtyWDFx0EKVP.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FneZutK7thpTkXEk07IatulsGlWV.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FtMFi_hK02smLq0IFBoIax3susEp.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FoeFVsRmbLF7bEdP8UyR6Aa9GTWB.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlnADP3RTC7TlUuwZB_gVmhUDpT8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FjrDoeOzF9v_4EGg9tnIYRojv6Ll.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FmS49Qk0YNvgvb_uSXRUclA7ilFH.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FhbEX-Q9HExk0MJ3OiYESfX-pHsy.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiqlKJCSNaXru5nAuPJ0b2E1F5Jv.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FscI3BnXh1yQNEErR3AJV4TAGjaf.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fq27ZY4J5hWbKQ0WppyRfzeR7U1Q.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FormpTs5yQAvmWq18KZ4bjf4WvLq.png">
+<meta property="article:published_time" content="2022-07-19T10:12:16.000Z">
+<meta property="article:modified_time" content="2022-11-10T08:10:54.668Z">
+<meta property="article:author" content="c4ooc0">
+<meta property="article:tag" content="安全 瞎折腾">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fn9fegmoXqic9Zbv3HoqAfwYrmWp.png">
+
+
+<link rel="canonical" href="https://c4ooc0.github.io/2022/07/19/Nmap%E6%9C%8D%E5%8A%A1%E8%AF%86%E5%88%AB%E6%8C%87%E7%BA%B9%E5%BA%93%E5%88%A9%E7%94%A8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://c4ooc0.github.io/2022/07/19/Nmap%E6%9C%8D%E5%8A%A1%E8%AF%86%E5%88%AB%E6%8C%87%E7%BA%B9%E5%BA%93%E5%88%A9%E7%94%A8/","path":"2022/07/19/Nmap服务识别指纹库利用/","title":"Nmap服务识别指纹库利用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nmap服务识别指纹库利用 | c4ooc0个人博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">c4ooc0个人博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">半吊子的安全工程师，ACG爱好者</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#nmap-%E6%9C%8D%E5%8A%A1%E6%A3%80%E6%B5%8B%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text"> Nmap 服务检测流量分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%A3%80%E6%B5%8B%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text"> 服务检测原理分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text"> 实现过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp-%E6%8E%A2%E9%92%88"><span class="nav-number">3.0.1.</span> <span class="nav-text"> tcp 探针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#udp-%E6%8E%A2%E9%92%88"><span class="nav-number">3.0.2.</span> <span class="nav-text"> udp 探针</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text"> 测试过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83-fapro"><span class="nav-number">3.1.1.</span> <span class="nav-text"> 搭建测试环境 fapro</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="nav-number">3.1.2.</span> <span class="nav-text"> 测试结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B"><span class="nav-number">4.</span> <span class="nav-text"> 改进</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">c4ooc0</p>
+  <div class="site-description" itemprop="description">永怀谦卑与求知欲</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/c4ooc0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;c4ooc0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/choocolate-yqwd/blog" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;choocolate-yqwd&#x2F;blog" rel="noopener" target="_blank">语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      友友们
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://macshuo.com/" title="http:&#x2F;&#x2F;macshuo.com&#x2F;" rel="noopener" target="_blank">testLink</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/07/19/Nmap%E6%9C%8D%E5%8A%A1%E8%AF%86%E5%88%AB%E6%8C%87%E7%BA%B9%E5%BA%93%E5%88%A9%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nmap服务识别指纹库利用 | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nmap服务识别指纹库利用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-19 18:12:16" itemprop="dateCreated datePublished" datetime="2022-07-19T18:12:16+08:00">2022-07-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 16:10:54" itemprop="dateModified" datetime="2022-11-10T16:10:54+08:00">2022-11-10</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>指纹库：</p>
+<p>json 化方法：</p>
+<h1 id="nmap-服务检测流量分析"><a class="markdownIt-Anchor" href="#nmap-服务检测流量分析"></a> Nmap 服务检测流量分析</h1>
+<p>client 131 server130 端口[80,3306]，在 client 上运行 nmap，命令：<code>nmap -sC -sV -p 80,3306 192.168.42.130</code>
+通信流量例子：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fn9fegmoXqic9Zbv3HoqAfwYrmWp.png" alt="" />
+在 nmap 运行的 client 上会根据目标端口个数启用自身端口与之通信，例如目标端口[80,3306]，client 33776 端口和 server 80 端口通信，client 56362 和 server 3306 端口通信，每个端口依次开始通信的时间会间隔大约 1s，可以并行实现，提高检测速度。</p>
+<h1 id="服务检测原理分析"><a class="markdownIt-Anchor" href="#服务检测原理分析"></a> 服务检测原理分析</h1>
+<p>以 80 端口为例:
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FtDnEsJPkNbCIkESmM6-PaUBTX0C.png" alt="" />
+下面是一个最简单的探针（probe）的通信流程：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FhSk-BC04Nty0UXQkNwcSwWmjJAy.svg" alt="" />基本就是先 TCP 三次握手，然后发探针，根据响应的内容，与指纹库中的 pattern 匹配，即可完成服务识别。
+然后是一个复杂的探针：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Ft9P8YLkjGTupxGhL5wW96g3hTT8.png" alt="" />
+和它的流量：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlTwWmy8KOfL-xYR8gV4uTWJTZaP.png" alt="" />
+可以看到 TCP 协议加上“probestring”的内容就变成 http 包了，之后的数据通信依旧是 TCP 包，最后响应是 http 包。</p>
+<h1 id="实现过程"><a class="markdownIt-Anchor" href="#实现过程"></a> 实现过程</h1>
+<h3 id="tcp-探针"><a class="markdownIt-Anchor" href="#tcp-探针"></a> tcp 探针</h3>
+<p>下面是 json 格式指纹库中的一个 tcp 探针例子：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">       <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;TCP&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;probename&quot;</span><span class="punctuation">:</span> <span class="string">&quot;GetRequest&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;probestring&quot;</span><span class="punctuation">:</span> <span class="string">&quot;GET / HTTP/1.0\\r\\n\\r\\n&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;ports&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">           <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line">           .......</span><br><span class="line">           <span class="string">&quot;8080-8085&quot;</span><span class="punctuation">,</span></span><br><span class="line">           .......</span><br><span class="line">       <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;sslports&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">           .......</span><br><span class="line">           <span class="string">&quot;60443&quot;</span></span><br><span class="line">       <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;totalwaitms&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;tcpwrappedms&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;rarity&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;fallback&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">&quot;matches&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">           <span class="punctuation">&#123;</span></span><br><span class="line">               <span class="attr">&quot;pattern&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^&lt;\\?xml version=\\\&quot;1\\.0\\\&quot;\\?&gt;\\r\\n&lt;!DOCTYPE cross-domain-policy SYSTEM \\\&quot;/xml/dtds/cross-domain-policy\\.dtd\\\&quot;&gt;\\r\\n&lt;cross-domain-policy&gt;\\r\\n    &lt;!-- This is a master socket policy file --&gt;\\r\\n    &lt;!-- No other socket policies on the host will be permitted --&gt;\\r\\n    &lt;site-control permitted-cross-domain-policies=\\\&quot;master-only\\\&quot;/&gt;\\r\\n    &lt;!-- This will allow access to port 1800 --&gt;\\r\\n    &lt;allow-access-from domain=\\\&quot;([^\\\&quot;]*)\\\&quot; to-ports=\\\&quot;([^\\\&quot;]*)\\\&quot;/&gt;\\r\\n&lt;/cross-domain-policy&gt;\\r\\n&quot;</span><span class="punctuation">,</span></span><br><span class="line">               <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;adobe-crossdomain&quot;</span><span class="punctuation">,</span></span><br><span class="line">               <span class="attr">&quot;pattern_flag&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">               <span class="attr">&quot;versioninfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                   <span class="attr">&quot;cpename&quot;</span><span class="punctuation">:</span> <span class="string">&quot;h:snom:870&quot;</span><span class="punctuation">,</span></span><br><span class="line">                   <span class="attr">&quot;devicetype&quot;</span><span class="punctuation">:</span> <span class="string">&quot;VoIP phone&quot;</span><span class="punctuation">,</span></span><br><span class="line">                   <span class="attr">&quot;hostname&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">                   <span class="attr">&quot;info&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Snom 870 VoIP phone; domain: $1; ports: $2&quot;</span><span class="punctuation">,</span></span><br><span class="line">                   <span class="attr">&quot;operatingsystem&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">                   <span class="attr">&quot;vendorproductname&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Adobe cross-domain policy&quot;</span><span class="punctuation">,</span></span><br><span class="line">                   <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">               <span class="punctuation">&#125;</span></span><br><span class="line">           <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">   ......</span><br></pre></td></tr></table></figure>
+<p>&quot;protocol&quot;指定走 TCP 还是 UDP，&quot;probestring&quot;指定携带的 payload。只要目标端口在 ports 里，就可以使用该探针进行测试，根据响应内容，使用 pattern 进行正则匹配，匹配成功就可以得到服务名称，甚至是服务版本了。</p>
+<ul>
+<li>方法一 构造 TCP 包</li>
+</ul>
+<p>使用 scapy 包实现三次握手是可行的，但是在实现过程中，需要精心构造 tcp 协议的各个字段，否则就会出现下面这张图的场景：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FpChNN70xKPetCpnY_Z5Zpxo5ZnV.png" alt="" /></p>
+<p>这里面 TCP 的错误提示全部遇到过，观察 nmap 的流量，可以看到其 tcp 协议中的 options 字段如下：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fp_pxRf1x6CcM3ZE8PCvipJf5edA.png" alt="" /></p>
+<p>推测缺少某些关键的可选字段是 TCP 协议经常报错的主要原因。虽然不影响服务 mysql 的检出，该服务的探针位于指纹库首位，而且该探针没有 payload，比较特殊，所以该方法不一定对其他服务也生效。</p>
+<ul>
+<li>方法 2 socket 连接</li>
+</ul>
+<p>一个流式 socket 连接首先会进行 tcp 三次握手，符合要求，然后再发送探针，接收数据即可。
+值得注意的是，http 探针的 probestring：<code>&quot;GET / HTTP/1.0\\r\\n\\r\\n&quot;</code>，后面的<code>\r\n</code>转二进制没有被正确解码，需要自己添加。
+或者我写了个探针转字节码的函数，感觉有点累赘，但可以规避其他错误（\0 转义等）：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">def probestr2bytes(probe)<span class="punctuation">:</span></span><br><span class="line">    probe = probe.split(<span class="string">&quot;\\&quot;</span>)</span><br><span class="line">    # 拆开类似这样&#x27;x07version&#x27;的字符串</span><br><span class="line">    for sub in probe<span class="punctuation">:</span></span><br><span class="line">        if len(sub) &gt; <span class="number">3</span><span class="punctuation">:</span></span><br><span class="line">            if sub<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span> == <span class="string">&quot;x&quot;</span> and len(sub) &gt; <span class="number">3</span><span class="punctuation">:</span></span><br><span class="line">                sub1 = <span class="punctuation">[</span>sub<span class="punctuation">[</span><span class="punctuation">:</span><span class="number">3</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line">                sub2 = <span class="punctuation">[</span>sub<span class="punctuation">[</span><span class="number">3</span><span class="punctuation">:</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line">                idx = probe.index(sub)</span><br><span class="line">                probe = probe<span class="punctuation">[</span><span class="punctuation">:</span>idx<span class="punctuation">]</span> + sub1 + sub2 + probe<span class="punctuation">[</span>idx + <span class="number">1</span><span class="punctuation">:</span><span class="punctuation">]</span></span><br><span class="line">    # 转字节码，有&#x27;x72&#x27;，&#x27;version&#x27;，&#x27;<span class="number">0</span>&#x27;，&#x27;r&#x27;<span class="punctuation">,</span> &#x27;n&#x27;，四种类型</span><br><span class="line">    result_bytes = b&#x27;&#x27;</span><br><span class="line">    for sub in probe<span class="punctuation">:</span></span><br><span class="line">        if len(sub) &gt; <span class="number">0</span><span class="punctuation">:</span></span><br><span class="line">            # &#x27;x72&#x27;</span><br><span class="line">            if sub<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span> == <span class="attr">&quot;x&quot;</span><span class="punctuation">:</span></span><br><span class="line">                # print(int(sub<span class="punctuation">[</span><span class="number">1</span><span class="punctuation">:</span><span class="punctuation">]</span><span class="punctuation">,</span> <span class="number">16</span>))</span><br><span class="line">                result_bytes += bytes(<span class="punctuation">[</span>int(sub<span class="punctuation">[</span><span class="number">1</span><span class="punctuation">:</span><span class="punctuation">]</span><span class="punctuation">,</span> <span class="number">16</span>)<span class="punctuation">]</span>)</span><br><span class="line">            # &#x27;<span class="number">0</span>&#x27;空字符</span><br><span class="line">            elif sub == <span class="attr">&quot;0&quot;</span><span class="punctuation">:</span></span><br><span class="line">                result_bytes += &#x27;\<span class="number">0</span>&#x27;.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">            elif sub == <span class="attr">&quot;r&quot;</span><span class="punctuation">:</span></span><br><span class="line">                result_bytes += &#x27;\r&#x27;.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">            elif sub == <span class="attr">&quot;n&quot;</span><span class="punctuation">:</span></span><br><span class="line">                result_bytes += &#x27;\n&#x27;.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">            else<span class="punctuation">:</span></span><br><span class="line">                result_bytes += sub.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    return result_bytes</span><br></pre></td></tr></table></figure>
+<p>成功识别成 http 协议:
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnvqZrCoydXnttQzUPMBSFqRjvxP.png" alt="" /></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">for string in port_TCP_padding<span class="punctuation">[</span>port<span class="punctuation">]</span><span class="punctuation">:</span></span><br><span class="line">    # print(<span class="string">&quot;start TCP probe&quot;</span> + string<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span>)</span><br><span class="line">    # 三次握手</span><br><span class="line">    try<span class="punctuation">:</span></span><br><span class="line">        s = socket.socket()</span><br><span class="line">        s.connect((ip<span class="punctuation">,</span> port))</span><br><span class="line">        # 使用scapy库中的sr系列函数收包</span><br><span class="line">        ss = StreamSocket(s<span class="punctuation">,</span> Raw)</span><br><span class="line">        # # 响应包数据文件不会很大，所以只收一个响应包即可，使用sr1</span><br><span class="line">        response = ss.sr1(Raw(probestr2bytes(string<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span>))<span class="punctuation">,</span> timeout=<span class="number">0.5</span><span class="punctuation">,</span> verbose=<span class="number">0</span>)</span><br><span class="line">        s.close()</span><br><span class="line">        if response<span class="punctuation">:</span></span><br><span class="line">            # 遍历匹配表达式</span><br><span class="line">            for match in string<span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span><span class="punctuation">:</span></span><br><span class="line">                if re.match(pattern=match<span class="punctuation">[</span><span class="string">&quot;pattern&quot;</span><span class="punctuation">]</span>.encode(&#x27;utf<span class="number">-8</span>&#x27;)<span class="punctuation">,</span> string=response<span class="punctuation">[</span>Raw<span class="punctuation">]</span>.load)<span class="punctuation">:</span></span><br><span class="line">                    # 输出结果</span><br><span class="line">                    info = str(port) + <span class="string">&quot; &quot;</span> + match<span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">]</span></span><br><span class="line">                    print(info)</span><br><span class="line">    except Exception as e<span class="punctuation">:</span></span><br><span class="line">        break</span><br></pre></td></tr></table></figure>
+<p>扫描结果：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fl9dxqs5tRy3ArNCEX4uhdLhMhMS.png" alt="" /></p>
+<h3 id="udp-探针"><a class="markdownIt-Anchor" href="#udp-探针"></a> udp 探针</h3>
+<p>这个地方深坑，一开始使用 scapy 实现收发 udp 包，但是发现 scapy 收不到 udp 的响应包，而在 wireshark 里一切正常，自制扫描器与 nmap 扫描的流量基本一致，关了防火墙也是如此。上网搜索原因，未果，放弃。
+遂继续使用 socket 库实现收发功能，一切正常。值得注意的是，需要设置 timeout，要不然没有响应包就会一直卡在接收函数上。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">for string in port_UDP_padding<span class="punctuation">[</span>port<span class="punctuation">]</span><span class="punctuation">:</span></span><br><span class="line">    ANY = <span class="string">&quot;0.0.0.0&quot;</span></span><br><span class="line">    # 创建UDP socket</span><br><span class="line">    s = socket.socket(socket.AF_INET<span class="punctuation">,</span> socket.SOCK_DGRAM<span class="punctuation">,</span> socket.IPPROTO_UDP)</span><br><span class="line">    # 允许端口复用</span><br><span class="line">    s.setsockopt(socket.SOL_SOCKET<span class="punctuation">,</span> socket.SO_REUSEADDR<span class="punctuation">,</span> <span class="number">1</span>)</span><br><span class="line">    # 绑定监听多播数据包的端口</span><br><span class="line">    s.bind((ANY<span class="punctuation">,</span> port))</span><br><span class="line">    s.sendto(probestr2bytes(string<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span>)<span class="punctuation">,</span> (ip<span class="punctuation">,</span> port))</span><br><span class="line">    s.settimeout(<span class="number">1</span>)</span><br><span class="line">    try<span class="punctuation">:</span></span><br><span class="line">        data<span class="punctuation">,</span> address = s.recvfrom(<span class="number">2048</span><span class="punctuation">,</span> )</span><br><span class="line">    except Exception as e<span class="punctuation">:</span></span><br><span class="line">        pass</span><br><span class="line">    else<span class="punctuation">:</span></span><br><span class="line">        for match in string<span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span><span class="punctuation">:</span></span><br><span class="line">            if re.match(pattern=match<span class="punctuation">[</span><span class="string">&quot;pattern&quot;</span><span class="punctuation">]</span>.encode(&#x27;utf<span class="number">-8</span>&#x27;)<span class="punctuation">,</span> string=data)<span class="punctuation">:</span></span><br><span class="line">                info = str(port) + <span class="string">&quot; &quot;</span> + match<span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">]</span></span><br><span class="line">                print(info)</span><br><span class="line">    s.close()</span><br></pre></td></tr></table></figure>
+<h2 id="测试过程"><a class="markdownIt-Anchor" href="#测试过程"></a> 测试过程</h2>
+<h3 id="搭建测试环境-fapro"><a class="markdownIt-Anchor" href="#搭建测试环境-fapro"></a> 搭建测试环境 fapro</h3>
+<p>FaPro 是一个服务端协议模拟工具,可以轻松启停多个网络服务。用来测试服务扫描工具，显然比自己一个一个安装方便很多。
+下载地址：<a target="_blank" rel="noopener" href="https://github.com/fofapro/fapro">https://github.com/fofapro/fapro</a>
+环境建议：用 Win8 或 win10，试了 win7 提示 Windows 版本太低，win11 莫名报错；Linux 下开 fapro 上的服务显示端口占用，没找到解决方法，一不开心就给你 error 退出。以下测试在 win10 虚拟机里跑 fapro，win11 物理机上跑 nmap 和自制扫描器。
+在 releases 中下载可执行文件：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FkFftulHhJXTHxLHmtyWDFx0EKVP.png" alt="" />
+拖到虚拟机里，在 fapro 的目录下打开终端，输入命令：
+<code>fapro genConfig &gt; fapro.json</code>
+得到配置 json 文件，这一步我 win11 和 win10 都试过，发现该文件是 utf-16 的编码，fapro 识别不了会报错（也很离谱），可以用 notepad++转成 utf-8 编码。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FneZutK7thpTkXEk07IatulsGlWV.png" alt="" />
+输入运行命令：
+<code>fapro run -v -l :8080</code>
+浏览器中打开本机 ip:8080 即可看到配置界面：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FtMFi_hK02smLq0IFBoIax3susEp.png" alt="" />
+选择相应的服务，点击“+New”开启，可以在跑 fapro 的终端里看到日志信息：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FoeFVsRmbLF7bEdP8UyR6Aa9GTWB.png" alt="" />
+如果这一步显示报错某个端口已经占用了，可以修改 fapro.json 文件中对应的端口。
+简单试一下 ssh 服务（默认账号 root/123456）：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlnADP3RTC7TlUuwZB_gVmhUDpT8.png" alt="" />
+fapro 对应输出：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FjrDoeOzF9v_4EGg9tnIYRojv6Ll.png" alt="" />
+这样环境就搭好了。</p>
+<h3 id="测试结果"><a class="markdownIt-Anchor" href="#测试结果"></a> 测试结果</h3>
+<p>把 fapro 能开的服务全部打开，使用自制扫描器进行服务扫描的结果：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FmS49Qk0YNvgvb_uSXRUclA7ilFH.png" alt="" />
+使用 nmap 扫描的结果：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FhbEX-Q9HExk0MJ3OiYESfX-pHsy.png" alt="" />
+[111,554,1234,1433,1521,3389,5432,7001,8080,8888,9200,20000,49152]这些端口自制扫描器扫不到，以下是原因研究：
+首先分析流量，下图是 nmap 扫 554（rtsp）端口的流量（命令：<code>nmap IP -p 554 -sV</code>）：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiqlKJCSNaXru5nAuPJ0b2E1F5Jv.png" alt="" />
+发现握手之后，跑 fapro 的 host 会一直发[FIN,ACK]包，想结束这此通信，而跑 nmap 的 host 不甘心，一直发探针，但一直收不到回应，这就是自制扫描器扫不出来的原因，自制扫描器需要根据响应内容进行正则匹配来判断。
+nmap 结果：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FscI3BnXh1yQNEErR3AJV4TAGjaf.png" alt="" />
+rtsp 后面的“？” 很可疑！
+换一个端口跑 rtsp 服务：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fq27ZY4J5hWbKQ0WppyRfzeR7U1Q.png" alt="" />
+扫 555 端口 rtsp 服务的 nmap 结果：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FormpTs5yQAvmWq18KZ4bjf4WvLq.png" alt="" />
+果然！因为没有响应包，nmap 也不能确认 555 端口跑的具体什么服务，直接根据端口判断成另外一个服务了。
+新机子瓦伊多姿，如果响应包内容不在 nmap 的指纹库内，nmap 并不能判断该端口上跑的服务，只是根据端口判断。
+到这里，基本可以实现了与 nmap 同等能力的服务识别功能。</p>
+<h1 id="改进"><a class="markdownIt-Anchor" href="#改进"></a> 改进</h1>
+<ul>
+<li>ssl 还没有测试</li>
+<li>结果输出未做去重和排序，单纯开线程跑，各种包的响应速度不一样导致结果输出不可控</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/14/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA1%20kali2022.2/" rel="prev" title="红日靶场1 kali2022.2">
+                  <i class="fa fa-chevron-left"></i> 红日靶场1 kali2022.2
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/23/%E5%86%B0%E8%9D%8E%E6%BC%94%E5%8C%96%E5%8F%B2%E2%80%94%E2%80%94%E4%BB%A5php%E9%A9%AC%E4%B8%BA%E4%BE%8B/" rel="next" title="冰蝎演化史——以php马为例">
+                  冰蝎演化史——以php马为例 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c4ooc0</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">19k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"per_page":true,"tags":"none","engine":"mathjax","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="exif" type="application/json">"{FocalLength}mm f/{FNumber} {ExposureTime}s"</script>
+<script src="https://fastly.jsdelivr.net/npm/exif-js@2/exif.min.js"></script>
+<script src="/lib/exif.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+</html>
