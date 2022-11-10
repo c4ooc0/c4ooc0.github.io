@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+<meta name="theme-color" content="#B0C4DE" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#B0C4DE" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 5.4.2">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="mask-icon" href="/images/logo.svg" color="#B0C4DE">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -17,14 +18,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="有些坑不记得了，如果哪里不完善，可以联系我 （从笔记里搬到博客凑数   插件   C&#x2F;C++ code Runner Run in Terminal Remote - SSH   配置 ssh 服务  服务端配置 ssh 服务（以 centos8 为例，需要确保两台主机能互相 ping 通）    12345678910111213# 查看openssh的安装情况，有输出则证明已安装yum lis">
+    <meta name="description" content="有些坑不记得了，如果哪里不完善，可以联系我 （从笔记里搬到博客凑数">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VScode 配置远程开发C语言程序环境">
 <meta property="og:url" content="https://c4ooc0.github.io/2021/09/28/VScode%20%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%8E%AF%E5%A2%83/index.html">
 <meta property="og:site_name" content="c4ooc0个人博客">
-<meta property="og:description" content="有些坑不记得了，如果哪里不完善，可以联系我 （从笔记里搬到博客凑数   插件   C&#x2F;C++ code Runner Run in Terminal Remote - SSH   配置 ssh 服务  服务端配置 ssh 服务（以 centos8 为例，需要确保两台主机能互相 ping 通）    12345678910111213# 查看openssh的安装情况，有输出则证明已安装yum lis">
+<meta property="og:description" content="有些坑不记得了，如果哪里不完善，可以联系我 （从笔记里搬到博客凑数">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fs8u020WwUJI51PBNuxVdqawAhaK.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FgX8R0bKirDPYs_DESgdD3999ut6.png">
@@ -33,7 +34,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlqJILF_LTs7aZKBUWTdKAocF9Rc.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FpkNxu73etW8oqMhSeJh5iUW8OXT.png">
 <meta property="article:published_time" content="2021-09-28T15:52:17.000Z">
-<meta property="article:modified_time" content="2022-11-10T08:11:38.759Z">
+<meta property="article:modified_time" content="2022-11-10T08:43:41.331Z">
 <meta property="article:author" content="c4ooc0">
 <meta property="article:tag" content="安全 瞎折腾">
 <meta name="twitter:card" content="summary">
@@ -158,7 +159,7 @@
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="http://macshuo.com/" title="http:&#x2F;&#x2F;macshuo.com&#x2F;" rel="noopener" target="_blank">testLink</a>
+          <a href="https://blog.c1ker.top/" title="https:&#x2F;&#x2F;blog.c1ker.top&#x2F;" rel="noopener" target="_blank">c1ker</a>
         </li>
     </ul>
   </div>
@@ -230,7 +231,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-10 16:11:38" itemprop="dateModified" datetime="2022-11-10T16:11:38+08:00">2022-11-10</time>
+      <time title="修改时间：2022-11-10 16:43:41" itemprop="dateModified" datetime="2022-11-10T16:43:41+08:00">2022-11-10</time>
     </span>
 
   
@@ -240,7 +241,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>419</span>
+      <span>420</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -261,6 +262,7 @@
         <p>有些坑不记得了，如果哪里不完善，可以联系我
 （从笔记里搬到博客凑数</p>
 <hr />
+<span id="more"></span>
 <ol>
 <li>插件</li>
 </ol>
