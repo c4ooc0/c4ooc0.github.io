@@ -19,26 +19,38 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"c4ooc0.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="半吊子的安全工程师，ACG爱好者">
-<meta property="og:type" content="website">
-<meta property="og:title" content="c4ooc0个人博客">
-<meta property="og:url" content="https://c4ooc0.github.io/index.html">
+    <meta name="description" content="Damn Vulnerable Web Application（DVWA）是一个非常脆弱的PHP&#x2F;MySQL Web应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助web开发人员更好地理解保护web应用程序的过程，并帮助学生和教师在受控教室环境中学习web应用程序安全。 看DVWA首页似乎推荐部署在虚拟机里，有机会改一下  第一步 下载phpstudy并安装 http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第0期 DVWA安装部署（Windows）">
+<meta property="og:url" content="https://c4ooc0.github.io/2022/11/10/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/index.html">
 <meta property="og:site_name" content="c4ooc0个人博客">
-<meta property="og:description" content="半吊子的安全工程师，ACG爱好者">
+<meta property="og:description" content="Damn Vulnerable Web Application（DVWA）是一个非常脆弱的PHP&#x2F;MySQL Web应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助web开发人员更好地理解保护web应用程序的过程，并帮助学生和教师在受控教室环境中学习web应用程序安全。 看DVWA首页似乎推荐部署在虚拟机里，有机会改一下  第一步 下载phpstudy并安装 http">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732066478-1fe9bb92-e262-4e9f-b8c8-4d3078af7248.png#align=left&amp;display=inline&amp;height=411&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=628&amp;originWidth=917&amp;size=61073&amp;status=done&amp;style=shadow&amp;width=600">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624731691770-18a8ddd3-b2fb-4602-97ba-e2bb5c28a13e.png#align=left&amp;display=inline&amp;height=443&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=748&amp;originWidth=1012&amp;size=84421&amp;status=done&amp;style=shadow&amp;width=600">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624731888966-b380ce6b-cd26-4fe1-9270-b7e6f88e8c06.png#align=left&amp;display=inline&amp;height=150&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=182&amp;originWidth=303&amp;size=7384&amp;status=done&amp;style=none&amp;width=250">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732312205-25f63cd1-98ad-43e8-a3f6-208427ee4257.png#align=left&amp;display=inline&amp;height=83&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=116&amp;originWidth=421&amp;size=6347&amp;status=done&amp;style=none&amp;width=300">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732435273-85aa5264-9525-4b79-a941-95e1c9feadf1.png#align=left&amp;display=inline&amp;height=91&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=111&amp;originWidth=364&amp;size=5378&amp;status=done&amp;style=none&amp;width=300">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732519231-d7ca69cb-1f48-498a-a796-14487a0c860c.png#align=left&amp;display=inline&amp;height=146&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=209&amp;originWidth=1000&amp;size=25041&amp;status=done&amp;style=none&amp;width=700">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624733417411-99c82d4c-b968-4054-90d1-1629bcdd7137.png#align=left&amp;display=inline&amp;height=125&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=166&amp;originWidth=398&amp;size=12340&amp;status=done&amp;style=none&amp;width=300">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732704208-f25dcc05-7c62-426f-9b5f-22184158136e.png#align=left&amp;display=inline&amp;height=41&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=62&amp;originWidth=239&amp;size=1918&amp;status=done&amp;style=none&amp;width=157">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732737612-085e7907-c6e4-4e83-8fe0-549e17dbf8ce.png#align=left&amp;display=inline&amp;height=294&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=460&amp;originWidth=436&amp;size=19071&amp;status=done&amp;style=none&amp;width=279">
+<meta property="article:published_time" content="2022-11-10T03:28:43.496Z">
+<meta property="article:modified_time" content="2022-11-10T03:32:56.750Z">
 <meta property="article:author" content="c4ooc0">
-<meta property="article:tag" content="安全 瞎折腾">
+<meta property="article:tag" content="安全">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732066478-1fe9bb92-e262-4e9f-b8c8-4d3078af7248.png#align=left&amp;display=inline&amp;height=411&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=628&amp;originWidth=917&amp;size=61073&amp;status=done&amp;style=shadow&amp;width=600">
 
 
-<link rel="canonical" href="https://c4ooc0.github.io/">
+<link rel="canonical" href="https://c4ooc0.github.io/2022/11/10/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://c4ooc0.github.io/2022/11/10/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/","path":"2022/11/10/第0期 DVWA安装部署（Windows）/","title":"第0期 DVWA安装部署（Windows）"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>c4ooc0个人博客</title>
+<title>第0期 DVWA安装部署（Windows） | c4ooc0个人博客</title>
   
 
 
@@ -66,7 +78,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">c4ooc0个人博客</h1>
+      <p class="site-title">c4ooc0个人博客</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -94,7 +106,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -107,6 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5-%E4%B8%8B%E8%BD%BDphpstudy%E5%B9%B6%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text"> 第一步 下载phpstudy并安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5-%E4%B8%8B%E8%BD%BDdvwa%E6%BA%90%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text"> 第二步 下载DVWA源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text"> 第三步  创建数据库</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -152,16 +165,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/11/10/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -175,13 +189,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | c4ooc0个人博客">
+      <meta itemprop="name" content="第0期 DVWA安装部署（Windows） | c4ooc0个人博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/11/10/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/" class="post-title-link" itemprop="url">第0期 DVWA安装部署（Windows）</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          第0期 DVWA安装部署（Windows）
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -205,7 +219,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Damn Vulnerable Web Application（DVWA）是一个非常脆弱的PHP/MySQL Web应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助web开发人员更好地理解保护web应用程序的过程，并帮助学生和教师在受控教室环境中学习web应用程序安全。
+        <p>Damn Vulnerable Web Application（DVWA）是一个非常脆弱的PHP/MySQL Web应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助web开发人员更好地理解保护web应用程序的过程，并帮助学生和教师在受控教室环境中学习web应用程序安全。
 看DVWA首页似乎推荐部署在虚拟机里，有机会改一下</p>
 <h1 id="第一步-下载phpstudy并安装"><a class="markdownIt-Anchor" href="#第一步-下载phpstudy并安装"></a> 第一步 下载phpstudy并安装</h1>
 <p><code>https://www.xp.cn/download.html</code>
@@ -232,7 +246,6 @@ DVWA-&gt;config-&gt;config.inc.php.dist文件，修改后缀名为ini.php。
 <img src="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732704208-f25dcc05-7c62-426f-9b5f-22184158136e.png#align=left&amp;display=inline&amp;height=41&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=62&amp;originWidth=239&amp;size=1918&amp;status=done&amp;style=none&amp;width=157" alt="image.png" />  -&gt;  <img src="https://cdn.nlark.com/yuque/0/2021/png/2597389/1624732737612-085e7907-c6e4-4e83-8fe0-549e17dbf8ce.png#align=left&amp;display=inline&amp;height=294&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=460&amp;originWidth=436&amp;size=19071&amp;status=done&amp;style=none&amp;width=279" alt="image.png" />
 访问<code>http://127.0.0.1/DVWA/index.php</code> 进行登录，用户名/密码：admin/password。登陆成功后，DVWA就可以正常使用了。</p>
 
-      
     </div>
 
     
@@ -240,162 +253,25 @@ DVWA-&gt;config-&gt;config.inc.php.dist文件，修改后缀名为ini.php。
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/%E5%AE%89%E5%85%A8/" rel="tag"># 安全</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/10/hello-world-1/" rel="prev" title="hello world">
+                  <i class="fa fa-chevron-left"></i> hello world
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/11/10/hello-world-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="c4ooc0">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="c4ooc0个人博客">
-      <meta itemprop="description" content="半吊子的安全工程师，ACG爱好者">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | c4ooc0个人博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/11/10/hello-world-1/" class="post-title-link" itemprop="url">hello world</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-11-10 09:47:43" itemprop="dateCreated datePublished" datetime="2022-11-10T09:47:43+08:00">2022-11-10</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/11/09/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="c4ooc0">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="c4ooc0个人博客">
-      <meta itemprop="description" content="半吊子的安全工程师，ACG爱好者">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | c4ooc0个人博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/11/09/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-11-09 16:09:06 / 修改时间：16:08:48" itemprop="dateCreated datePublished" datetime="2022-11-09T16:09:06+08:00">2022-11-09</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2>
-<h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 
