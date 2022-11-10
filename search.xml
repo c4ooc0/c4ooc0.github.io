@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>第0期 DVWA安装部署（Windows）</title>
+      <link href="/2022/11/10/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/"/>
+      <url>/2022/11/10/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<p>Damn Vulnerable Web Application（DVWA）是一个非常脆弱的PHP/MySQL Web应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助web开发人员更好地理解保护web应用程序的过程，并帮助学生和教师在受控教室环境中学习web应用程序安全。看DVWA首页似乎推荐部署在虚拟机里，有机会改一下</p><h1 id="第一步-下载phpstudy并安装"><a class="markdownIt-Anchor" href="#第一步-下载phpstudy并安装"></a> 第一步 下载phpstudy并安装</h1><p><code>https://www.xp.cn/download.html</code>解压后进行安装，一般装在D盘问题不大。安装完成后，浏览器访问<code>127.0.0.1</code>，看到如下界面即安装成功。</p><h1 id="第二步-下载dvwa源码"><a class="markdownIt-Anchor" href="#第二步-下载dvwa源码"></a> 第二步 下载DVWA源码</h1><p><code>https://github.com/digininja/DVWA</code>或者使用命令：<code>git clone https://github.com/digininja/DVWA.git</code></p><p>打开phpstudy网站的根目录，在phpstudy的安装目录下，路径一般是<code>...\phpstudy_pro\WWW</code>。将解压后的DVWA文件夹复制到该目录。方便期间，DVWA-master文件可以改名为DVWA，以下以改名为前提进行演示。</p><p>DVWA-&gt;config-&gt;config.inc.php.dist文件，修改后缀名为ini.php。</p><p>打开该文件，修改数据库密码。首先查看phpstudy中的数据库密码，鼠标移到密码处就显示了。</p><p>将db_user改为root，db_password根据phpstudy显示的改，我这里是123456。)</p><h1 id="第三步-创建数据库"><a class="markdownIt-Anchor" href="#第三步-创建数据库"></a> 第三步  创建数据库</h1><p>浏览器访问<code>127.0.0.1/DVWA/setup.php</code>，找到最后，创建数据库。(这里如果失败，一般就是数据库名或者密码不对，看一下phpstudy的数据库设置就知道了)</p><p>访问<code>http://127.0.0.1/DVWA/index.php</code> 进行登录，用户名/密码：admin/password。登陆成功后，DVWA就可以正常使用了。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 安全 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2022/11/09/hello-world/"/>
+      <url>/2022/11/09/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2><h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
