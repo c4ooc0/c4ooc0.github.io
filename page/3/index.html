@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -214,6 +214,153 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2021/09/28/VScode%20%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/images.jpg">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/09/28/VScode%20%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">VScode 配置远程开发C语言程序环境</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-09-28 23:52:17" itemprop="dateCreated datePublished" datetime="2021-09-28T23:52:17+08:00">2021-09-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-17 10:46:28" itemprop="dateModified" datetime="2022-11-17T10:46:28+08:00">2022-11-17</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>419</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>有些坑不记得了，如果哪里不完善，可以联系我
+（从笔记里搬到博客凑数</p>
+<hr />
+<ol>
+<li>插件</li>
+</ol>
+<ul>
+<li>C/C++</li>
+<li>code Runner</li>
+<li>Run in Terminal</li>
+<li>Remote - SSH</li>
+</ul>
+<ol start="2">
+<li>配置 ssh 服务
+<ol>
+<li>服务端配置 ssh 服务（以 centos8 为例，需要确保两台主机能互相 ping 通）</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看openssh的安装情况，有输出则证明已安装</span></span><br><span class="line">yum list installed | grep openssh-server</span><br><span class="line"><span class="comment"># 启动sshd服务。</span></span><br><span class="line">service sshd start</span><br><span class="line"><span class="comment"># 检查sshd服务是否已经启动</span></span><br><span class="line">ps -e | grep sshd</span><br><span class="line"><span class="comment"># 将sshd服务添加之自启动列表中，并查看是否开启自启动sshd服务。</span></span><br><span class="line">systemctl <span class="built_in">enable</span> sshd.service</span><br><span class="line">systemctl list-unit-files | grep sshd</span><br><span class="line"><span class="comment"># 查看是否安装了GCC</span></span><br><span class="line">gcc --version</span><br><span class="line"><span class="comment"># 安装GCC</span></span><br><span class="line">yum -y install gcc gcc-c++ kernel-devel</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>vscode ssh 登录服务端</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fs8u020WwUJI51PBNuxVdqawAhaK.png" alt="" />安装完 Remote - SSH 会有这个图标，点击-&gt;Connect to Host-&gt;Configure SSH Hosts-&gt;选择一个 config</p>
+<ul>
+<li>配置 config 的信息：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host VMware</span><br><span class="line">  HostName 192.168.79.128</span><br><span class="line">  User user</span><br></pre></td></tr></table></figure>
+<p>Host：配置文件的名字
+HostName：远程主机的 IP 地址
+User：登录用户
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FgX8R0bKirDPYs_DESgdD3999ut6.png" alt="" /></p>
+<ul>
+<li>右击-&gt;Connect to Host</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FoevAyjgz110H78QrLhI4GqE7JRB.png" alt="" /></p>
+<ul>
+<li>选择对应的平台</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FvyArCi4SbZSZpDzbujKZtGy-wNj.png" alt="" /></p>
+<ul>
+<li>输入密码，按回车</li>
+</ul>
+<ol start="3">
+<li>配置 C 语言环境</li>
+<li>从菜单栏选择 Terminal&gt;Configure Default Build Task, 在下拉栏里选择 C/C++: g++ build active file. 这会生成 tasks.json 文件</li>
+<li>在菜单栏选择 Debug&gt;Add Configuration, 选择 C++ (GDB/LLDB), 在下拉栏中选择 g++ build and debug active file.这会创建 launch.json</li>
+<li>在 setting.json 里添加<code>&quot;editor.formatOnType&quot;: true,</code>（c、d 两步是为了自动缩进和方便输入）</li>
+<li>更改设置 文件-&gt;首选项-&gt;设置</li>
+</ol>
+<p>搜索 Run In Terminal ，勾选
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FlqJILF_LTs7aZKBUWTdKAocF9Rc.png" alt="" />
+搜索 format，勾选
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FpkNxu73etW8oqMhSeJh5iUW8OXT.png" alt="" /></p>
+<ol start="4">
+<li>之后应该就能跑了，最近事务繁多，无暇再配置一遍看看有没有坑了，总之有坑联系我</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2021/06/20/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -250,7 +397,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-10 16:45:49" itemprop="dateModified" datetime="2022-11-10T16:45:49+08:00">2022-11-10</time>
+      <time title="修改时间：2022-11-17 10:46:34" itemprop="dateModified" datetime="2022-11-17T10:46:34+08:00">2022-11-17</time>
     </span>
 
   
@@ -260,7 +407,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>415</span>
+      <span>414</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -280,14 +427,31 @@
     <div class="post-body" itemprop="articleBody">
           <p>Damn Vulnerable Web Application（DVWA）是一个非常脆弱的 PHP/MySQL Web 应用程序。它的主要目标是帮助安全专业人员在合法环境中测试他们的技能和工具，帮助 web 开发人员更好地理解保护 web 应用程序的过程，并帮助学生和教师在受控教室环境中学习 web 应用程序安全。
 看 DVWA 首页似乎推荐部署在虚拟机里，有机会改一下</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/20/%E7%AC%AC0%E6%9C%9F%20DVWA%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%EF%BC%88Windows%EF%BC%89/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+<h1 id="第一步-下载-phpstudy-并安装"><a class="markdownIt-Anchor" href="#第一步-下载-phpstudy-并安装"></a> 第一步 下载 phpstudy 并安装</h1>
+<p><code>https://www.xp.cn/download.html</code>
+解压后进行安装，一般装在 D 盘问题不大。
+安装完成后，浏览器访问<code>127.0.0.1</code>，看到如下界面即安装成功。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FnXzqpOWpbWzngKRymUsIQrAVe1P.png" alt="" /></p>
+<h1 id="第二步-下载-dvwa-源码"><a class="markdownIt-Anchor" href="#第二步-下载-dvwa-源码"></a> 第二步 下载 DVWA 源码</h1>
+<p><code>https://github.com/digininja/DVWA</code>
+或者使用命令：
+<code>git clone https://github.com/digininja/DVWA.git</code>
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuH_W7zP0OSuFCifaaZJZ6NKDbmu.png" alt="" />
+打开 phpstudy 网站的根目录，在 phpstudy 的安装目录下，路径一般是<code>...\phpstudy_pro\WWW</code>。
+将解压后的 DVWA 文件夹复制到该目录。方便期间，DVWA-master 文件可以改名为 DVWA，以下以改名为前提进行演示。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fp-2-PYcQuLviIV0FTZt0BiSy83P.png" alt="" />
+DVWA-&gt;config-&gt;config.inc.php.dist 文件，修改后缀名为 ini.php。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FuqtscdXrTam_YH8izkIOQg9WlNa.png" alt="" /> **-&gt; **<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FrVZ0ILD0H1AVXkc8HPuCMQ6Ua-W.png" alt="" />
+打开该文件，修改数据库密码。
+首先查看 phpstudy 中的数据库密码，鼠标移到密码处就显示了。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fv4FaGWFMoiZo84RcjA30akRRrVZ.png" alt="" />
+将 db_user 改为 root，db_password 根据 phpstudy 显示的改，我这里是 123456。
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FqDrERtj99DZcWaFEiVMEkl3K13j.png" alt="" /></p>
+<h1 id="第三步-创建数据库"><a class="markdownIt-Anchor" href="#第三步-创建数据库"></a> 第三步 创建数据库</h1>
+<p>浏览器访问<code>127.0.0.1/DVWA/setup.php</code>，找到最后，创建数据库。(这里如果失败，一般就是数据库名或者密码不对，看一下 phpstudy 的数据库设置就知道了)
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FiDJc3iAwimLMfDjaOaiSZK1pgv4.png" alt="" />  -&gt;  <img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FvJustiAjf3Zk68qrynim66ZJQzJ.png" alt="" />
+访问<code>http://127.0.0.1/DVWA/index.php</code> 进行登录，用户名/密码：admin/password。登陆成功后，DVWA 就可以正常使用了。</p>
+
       
     </div>
 
@@ -329,13 +493,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">19k</span>
+    <span title="站点总字数">22k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:09</span>
+    <span title="站点阅读时长">1:22</span>
   </span>
 </div>
 <div class="busuanzi-count">
