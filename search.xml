@@ -1178,7 +1178,7 @@ print(obj.study) 4.使用</strong>setstate</strong>打印 flag 的值</p>
 <p>Java.io.ObjectOutputStream代表对象输出流，它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。</p>
 <h3 id="javaioobjectinputstream"><a class="markdownIt-Anchor" href="#javaioobjectinputstream"></a> Java.io.ObjectInputStream</h3>
 <p>Java.io.ObjectInputStream代表对象输入流，它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。</p>
- <span id="more"></span>
+<span id="more"></span>
 <h3 id="serializable接口"><a class="markdownIt-Anchor" href="#serializable接口"></a> Serializable接口</h3>
 <p>只有实现了Serializable和Externalizable接口的类的对象才能被序列化。只需要声明该接口，不需要实现。
 Externalizable接口继承自Serializable接口，实现Externalizable接口的类完全由自身来控制序列化的行为，而仅实现Serializable接口的类可以采用默认的序列化方式 。</p>
